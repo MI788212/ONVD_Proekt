@@ -63,6 +63,20 @@ public class PickUpScript : MonoBehaviour
             }
 
         }
+        //to show E
+        if (heldObj == null) //if currently not holding anything
+        {
+            //perform raycast to check if player is looking at object within pickuprange
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, pickUpRange))
+            {
+                //make sure pickup tag is attached
+                if (hit.transform.gameObject.tag == "canPickUp")
+                {
+                    //Debug.Log("You can pick up this object with E!");
+                }
+            }
+        }
     }
     void PickUpObject(GameObject pickUpObj)
     {
