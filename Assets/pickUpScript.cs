@@ -9,7 +9,7 @@ public class PickUpScript : MonoBehaviour
     public float throwForce = 500f; //force at which the object is thrown at
     public float pickUpRange = 5f; //how far the player can pickup the object from
     public float rotationSensitivity = 2f; //how fast/slow the object is rotated in relation to mouse movement
-    private GameObject heldObj; //object which we pick up
+    public GameObject heldObj; //object which we pick up
     private Rigidbody heldObjRb; //rigidbody of object we pick up
     private bool canDrop = true; //this is needed so we don't throw/drop object when rotating the object
     private int LayerNumber; //layer index
@@ -19,11 +19,15 @@ public class PickUpScript : MonoBehaviour
     //we want to disable the player looking around when rotating the object
     //example below 
     //MouseLookScript mouseLookScript;
+
+    private teaCupScript teaCupScript;
+    public GameObject fullTeaCup;
     void Start()
     {
         LayerNumber = LayerMask.NameToLayer("holdLayer"); //if your holdLayer is named differently make sure to change this ""
         //mouseLookScript = player.GetComponent<MouseLookScript>(); ova e ako skriptata e na drug objekt
         originalSensitivity = cameraControllerFPS.sensitivity;
+        teaCupScript = fullTeaCup.GetComponent<teaCupScript>();
     }
     void Update()
     {
@@ -78,7 +82,7 @@ public class PickUpScript : MonoBehaviour
             }
         }
     }
-    void PickUpObject(GameObject pickUpObj)
+    public void PickUpObject(GameObject pickUpObj)
     {
         if (pickUpObj.GetComponent<Rigidbody>()) //make sure the object has a RigidBody
         {
@@ -89,9 +93,11 @@ public class PickUpScript : MonoBehaviour
             heldObj.layer = LayerNumber; //change the object layer to the holdLayer
             //make sure object doesnt collide with player, it can cause weird bugs
             Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), true);
+
+            if (heldObj == fullTeaCup) teaCupScript.teaCupJustPickedUp();
         }
     }
-    void DropObject()
+    public void DropObject()
     {
         //re-enable collision with player
         Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), false);
