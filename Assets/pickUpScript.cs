@@ -15,6 +15,7 @@ public class PickUpScript : MonoBehaviour
     private int LayerNumber; //layer index
     public CameraControllerFPS cameraControllerFPS;
     private float originalSensitivity;
+    public GameObject crosshair;
     //Reference to script which includes mouse movement of player (looking around)
     //we want to disable the player looking around when rotating the object
     //example below 
@@ -94,7 +95,8 @@ public class PickUpScript : MonoBehaviour
             //make sure object doesnt collide with player, it can cause weird bugs
             Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), true);
 
-            if (heldObj == fullTeaCup) teaCupScript.teaCupJustPickedUp();
+            crosshair.SetActive(false);
+            
         }
     }
     public void DropObject()
@@ -152,7 +154,7 @@ public class PickUpScript : MonoBehaviour
         heldObjRb.AddForce(transform.forward * throwForce);
         heldObj = null;
     }
-    void StopClipping() //function only called when dropping/throwing
+    public void StopClipping() //function only called when dropping/throwing
     {
         var clipRange = Vector3.Distance(heldObj.transform.position, transform.position); //distance from holdPos to the camera
         //have to use RaycastAll as object blocks raycast in center screen
@@ -166,5 +168,8 @@ public class PickUpScript : MonoBehaviour
             heldObj.transform.position = transform.position + new Vector3(0f, -0.5f, 0f); //offset slightly downward to stop object dropping above player 
             //if your player is small, change the -0.5f to a smaller number (in magnitude) ie: -0.1f
         }
+
+        crosshair.SetActive(true);
+
     }
 }

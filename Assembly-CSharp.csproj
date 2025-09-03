@@ -63,7 +63,9 @@
   <ItemGroup>
     <Compile Include="Assets\pickUpScript.cs" />
     <Compile Include="Assets\CameraControllerFPS.cs" />
+    <Compile Include="Assets\InteractingScript.cs" />
     <Compile Include="Assets\teaCupScript.cs" />
+    <Compile Include="Assets\textGuideScript.cs" />
     <Compile Include="Assets\PlayerMovementCC.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
   </ItemGroup>

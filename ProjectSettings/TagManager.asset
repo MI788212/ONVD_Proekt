@@ -6,6 +6,7 @@ TagManager:
   tags:
   - canPickUp
   - warmingArea
+  - crosshair
   layers:
   - Default
   - TransparentFX
@@ -13,8 +14,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - ui1
+  - ui2
   - holdLayer
   - 
   - 
