@@ -7,7 +7,7 @@ public class InteractingScript : MonoBehaviour
 
     //the objects i need to interact with
     public GameObject candle;
-    public GameObject WarmingArea;
+    public GameObject warmingArea;
     public GameObject fullTeaCup;
     public GameObject emptyTeaCup;
     public GameObject phone;
@@ -16,16 +16,17 @@ public class InteractingScript : MonoBehaviour
     public GameObject key;
 
     public GameObject textGuide;
+    public GameObject textBox;
 
     //the scripts i need to access
     public PickUpScript pickUpScript;
     public CameraControllerFPS cameraControllerFPS;
     private teaCupScript teaCupScript;
     private textGuideScript textGuideScript;
+    private DialogueScript dialogueScript;
 
     public float rayDistance = 5f;
     public LayerMask interactLayer;
-    public float dia = 0; //its time for dialogue 0,1,2...
 
     //teaCup part variables
     private bool inWarmingArea = false;
@@ -35,7 +36,76 @@ public class InteractingScript : MonoBehaviour
     private float requiredWarmingTime = 5f;
     public float heightAboveCandle = 0.3f;
 
+    //messages
+    public GameObject pickUpMess;
+    public GameObject whilePickedUpMess;
+    public GameObject interactMess;
+
     void Start()
+    {
+        teaCupScript = fullTeaCup.GetComponent<teaCupScript>();
+        textGuideScript = textGuide.GetComponent<textGuideScript>();
+        dialogueScript = textBox.GetComponent<DialogueScript>();
+        textBox.SetActive(false);
+    }
+    private void Update()
+    {
+        
+        warmingArea.SetActive(pickUpScript.heldObj != null && !warmedUp);
+
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        whilePickedUpMess.SetActive(pickUpScript.heldObj != null);
+
+        interactMess.SetActive(Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canInteractWith") && pickUpScript.heldObj == null);
+
+        if(Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canPickUp") && pickUpScript.heldObj == null)
+        {
+            pickUpMess.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                if(hit.collider.gameObject == fullTeaCup)
+                {
+                    dialogueScript.lines[0] = "Bleghhh...";
+                    dialogueScript.lines[1] = "You could go for some tea right now, but you refuse to drink it this cold.";
+                    dialogueScript.lines[2] = "Maybe there's a way to warm it up?";
+                    textBox.SetActive(true);
+                }
+            }
+        }
+        else
+        {
+            pickUpMess.SetActive(false);
+        }
+
+        if (inWarmingArea && pickUpScript.heldObj == null && !warming)
+        {
+            fullTeaCup.GetComponent<Rigidbody>().isKinematic = true;
+            fullTeaCup.transform.position = candle.transform.position + Vector3.up * heightAboveCandle;
+            fullTeaCup.transform.rotation = Quaternion.identity;
+            warming = true;
+            Debug.Log("It's cookin. Give it a sec.");
+        }
+    }
+
+    public void CupInWarmingArea()
+    {
+        inWarmingArea = true;
+    }
+    public void CupExitedInWarmingArea()
+    {
+        inWarmingArea = false;
+    }
+}
+
+
+
+
+
+//OLD SCRIPT//
+
+/*    void Start()
     {
         teaCupScript = fullTeaCup.GetComponent<teaCupScript>();
         textGuideScript = textGuide.GetComponent<textGuideScript>();
@@ -107,7 +177,18 @@ public class InteractingScript : MonoBehaviour
     {
         inWarmingArea = false;
     }
-}
+}*/
+
+
+
+
+
+////////////////////////////////////////
+//OLD TEACUP SCRIPT
+////////////////////////////////////////
+
+
+
 
 /*
  using UnityEngine;

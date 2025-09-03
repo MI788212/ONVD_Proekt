@@ -21,14 +21,14 @@ public class PickUpScript : MonoBehaviour
     //example below 
     //MouseLookScript mouseLookScript;
 
-    private teaCupScript teaCupScript;
-    public GameObject fullTeaCup;
+
+
+    
     void Start()
     {
         LayerNumber = LayerMask.NameToLayer("holdLayer"); //if your holdLayer is named differently make sure to change this ""
         //mouseLookScript = player.GetComponent<MouseLookScript>(); ova e ako skriptata e na drug objekt
         originalSensitivity = cameraControllerFPS.sensitivity;
-        teaCupScript = fullTeaCup.GetComponent<teaCupScript>();
     }
     void Update()
     {
