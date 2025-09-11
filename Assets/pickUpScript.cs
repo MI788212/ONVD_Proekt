@@ -21,9 +21,11 @@ public class PickUpScript : MonoBehaviour
     //example below 
     //MouseLookScript mouseLookScript;
 
+    public bool justThrew = false;
+    public float throwCooldown = 0.2f;
 
 
-    
+
     void Start()
     {
         LayerNumber = LayerMask.NameToLayer("holdLayer"); //if your holdLayer is named differently make sure to change this ""
@@ -107,6 +109,8 @@ public class PickUpScript : MonoBehaviour
         heldObjRb.isKinematic = false;
         heldObj.transform.parent = null; //unparent object
         heldObj = null; //undefine game object
+        justThrew = true;
+        Invoke(nameof(ResetThrowFlag), throwCooldown);
     }
     void MoveObject()
     {
@@ -153,6 +157,13 @@ public class PickUpScript : MonoBehaviour
         heldObj.transform.parent = null;
         heldObjRb.AddForce(transform.forward * throwForce);
         heldObj = null;
+        justThrew = true;
+        Invoke(nameof(ResetThrowFlag), throwCooldown);
+    }
+
+    void ResetThrowFlag()
+    {
+        justThrew = false;
     }
     public void StopClipping() //function only called when dropping/throwing
     {

@@ -1,6 +1,8 @@
 using System.Xml;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
+using System.Collections;
 
 public class InteractingScript : MonoBehaviour
 {
@@ -40,13 +42,35 @@ public class InteractingScript : MonoBehaviour
     public GameObject pickUpMess;
     public GameObject whilePickedUpMess;
     public GameObject interactMess;
+    public GameObject cookingMess;
 
-    void Start()
+    private int choice; // 0: drink, 1: call...
+
+    public TextMeshProUGUI text;   // guideMess
+    private int guideMessIndex = -1; // 0: try pick up, 1: try rotate..
+    public float fadeInTime = 0.5f;     // Duration to fade in
+    public float holdTime = 2f;         // How long it stays fully visible
+    public float fadeOutTime = 1.5f;      // Duration to fade out
+
+
+    void Awake()
     {
         teaCupScript = fullTeaCup.GetComponent<teaCupScript>();
         textGuideScript = textGuide.GetComponent<textGuideScript>();
         dialogueScript = textBox.GetComponent<DialogueScript>();
         textBox.SetActive(false);
+        pickUpMess.SetActive(false);
+        whilePickedUpMess.SetActive(false);
+        interactMess.SetActive(false);
+        cookingMess.SetActive(false);
+        dialogueScript.hasChoice = false;
+        guideMessIndex = -1;
+
+    }
+
+    private void Start()
+    {
+        ShowMessage("");
     }
     private void Update()
     {
@@ -57,36 +81,79 @@ public class InteractingScript : MonoBehaviour
         RaycastHit hit;
 
         whilePickedUpMess.SetActive(pickUpScript.heldObj != null);
+        cookingMess.SetActive(warming);
 
-        interactMess.SetActive(Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canInteractWith") && pickUpScript.heldObj == null);
+        //interactMess.SetActive(Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canInteractWith") && pickUpScript.heldObj == null);
 
-        if(Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canPickUp") && pickUpScript.heldObj == null)
+        if(guideMessIndex == 0)
         {
-            pickUpMess.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.F))
+            guideMessIndex++;
+            ShowMessage("Try picking up an object with <<E>>");
+        }
+
+        if (Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canPickUp") && pickUpScript.heldObj == null && !pickUpScript.justThrew)
+        {
+            //pickUpMess.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 if(hit.collider.gameObject == fullTeaCup)
                 {
-                    dialogueScript.lines[0] = "Bleghhh...";
-                    dialogueScript.lines[1] = "You could go for some tea right now, but you refuse to drink it this cold.";
-                    dialogueScript.lines[2] = "Maybe there's a way to warm it up?";
-                    textBox.SetActive(true);
+                    if(warmedUp)
+                    {
+                        dialogueScript.lines.Clear();
+                        dialogueScript.lines.Add("It's warmed up.");
+                        dialogueScript.lines.Add("Drink up?");
+                        dialogueScript.hasChoice = true;
+                        choice = 0;
+                        textBox.SetActive(true);
+                    }
+                    else if(!warming)
+                    {
+                        dialogueScript.lines.Clear();
+                        dialogueScript.lines.Add("Bleghhh...");
+                        dialogueScript.lines.Add("You could go for some tea right now, but you refuse to drink it this cold.");
+                        dialogueScript.lines.Add("Maybe there's a way to warm it up?");
+                        guideMessIndex = 0;
+                        textBox.SetActive(true);
+                    }
                 }
             }
         }
         else
         {
-            pickUpMess.SetActive(false);
+            //pickUpMess.SetActive(false);
         }
 
-        if (inWarmingArea && pickUpScript.heldObj == null && !warming)
+        if (inWarmingArea && pickUpScript.heldObj == null && !pickUpScript.justThrew && !warming && !warmedUp)
         {
+            warmingTimeCounter = 0f;
             fullTeaCup.GetComponent<Rigidbody>().isKinematic = true;
             fullTeaCup.transform.position = candle.transform.position + Vector3.up * heightAboveCandle;
             fullTeaCup.transform.rotation = Quaternion.identity;
             warming = true;
             Debug.Log("It's cookin. Give it a sec.");
         }
+        if (warming)
+        {   
+            pickUpScript.enabled = false;
+            warmingTimeCounter += Time.deltaTime;
+            if (warmingTimeCounter >= requiredWarmingTime)
+            {
+                Debug.Log("Done!! Drink up");
+                warming = false;
+                warmedUp = true;
+                cookingMess.SetActive(false);
+                pickUpScript.enabled = true;
+
+                dialogueScript.lines.Clear();
+                dialogueScript.lines.Add("It's warmed up.");
+                dialogueScript.lines.Add("Drink up?");
+                dialogueScript.hasChoice = true;
+                choice = 0;
+                textBox.SetActive(true);
+            }
+        }
+
     }
 
     public void CupInWarmingArea()
@@ -96,6 +163,75 @@ public class InteractingScript : MonoBehaviour
     public void CupExitedInWarmingArea()
     {
         inWarmingArea = false;
+        warming = false;
+    }
+
+    public void madeChoice(bool yesChoice)
+    {
+        switch (choice)
+        {
+            case 0:
+                if(yesChoice)
+                {
+                    Debug.Log("drank tea");
+                    Debug.Log("Still tasted yucky, but it warmed you up. And you seem to notice something. Try rotating the cup by holding R and moving your mouse.");
+                    fullTeaCup.SetActive(false);
+                    emptyTeaCup.transform.position = fullTeaCup.transform.position;
+                    emptyTeaCup.transform.rotation = fullTeaCup.transform.rotation;
+                    emptyTeaCup.gameObject.SetActive(true);
+
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("Still tasted yucky, but it warmed you up. And you seem to notice something.");
+                    textBox.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("didnt drink tea");
+                }
+                break;
+
+            default: break;
+        }
+    }
+
+    public void ShowMessage(string message)
+    {
+        StopAllCoroutines();            
+        StartCoroutine(FadeInOut(message));
+    }
+
+    private IEnumerator FadeInOut(string message)
+    {
+        text.text = message;
+
+        // Initialize
+        text.alpha = 0f;
+
+        float elapsed = 0f;
+
+        // --- Fade in ---
+        while (elapsed < fadeInTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / fadeInTime);
+            text.alpha = Mathf.Lerp(0f, 1f, t);
+            yield return null;
+        }
+        text.alpha = 1f;
+
+        // --- Hold ---
+        yield return new WaitForSeconds(holdTime);
+
+        // --- Fade out ---
+        elapsed = 0f;
+        while (elapsed < fadeOutTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / fadeOutTime);
+            text.alpha = Mathf.Lerp(1f, 0f, t);
+            yield return null;
+        }
+        text.alpha = 0f;
     }
 }
 

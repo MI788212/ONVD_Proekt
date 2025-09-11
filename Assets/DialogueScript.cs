@@ -7,20 +7,49 @@ using UnityEngine.InputSystem;
 public class DialogueScript : MonoBehaviour
 {
     public TextMeshProUGUI textComponent;
-    public string[] lines;
+    public List<string> lines = new List<string>();
     public float textSpeed = 0.2f;
     private int index;
+    public GameObject mainCamera;
+    private InteractingScript interactingScript;
+    private PickUpScript pickUpScript;
+    public GameObject player;
+    private CameraControllerFPS camControllerFPS;
+    private PlayerMovementBehavior playerMovementBehavior;
+    public GameObject crosshair;
+    public bool hasChoice = false;
+    public GameObject choiceBoxes;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private void Awake()
+    {
+        interactingScript = mainCamera.GetComponent<InteractingScript>();
+        pickUpScript= mainCamera.GetComponent<PickUpScript>();
+        camControllerFPS = mainCamera.GetComponent<CameraControllerFPS>();
+        playerMovementBehavior = player.GetComponent<PlayerMovementBehavior>();
+    }
+    void OnEnable()
     {
         textComponent.text = string.Empty;
         StartDialogue();
+        interactingScript.enabled = false;
+        pickUpScript.enabled = false;
+        camControllerFPS.enabled = false;
+        playerMovementBehavior.enabled = false;
+        crosshair.SetActive(false);
+        choiceBoxes.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (index == lines.Count - 1 && hasChoice)
+        {
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+            choiceBoxes.SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             if(textComponent.text == lines[index])
             {
@@ -51,7 +80,7 @@ public class DialogueScript : MonoBehaviour
 
     void NextLine()
     {
-        if(index < lines.Length - 1)
+        if(index < lines.Count - 1)
         {
             index++;
             textComponent.text = string.Empty;
@@ -60,6 +89,42 @@ public class DialogueScript : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
+            interactingScript.enabled = true;
+            pickUpScript.enabled = true;
+            camControllerFPS.enabled = true;
+            playerMovementBehavior.enabled = true;
+            crosshair.SetActive(true);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            hasChoice = false;
         }
+    }
+
+    public void choseYes()
+    {
+        interactingScript.madeChoice(true);
+        gameObject.SetActive(false);
+        interactingScript.enabled = true;
+        pickUpScript.enabled = true;
+        camControllerFPS.enabled = true;
+        playerMovementBehavior.enabled = true;
+        crosshair.SetActive(true);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        hasChoice = false;
+
+    }
+    public void choseNo() 
+    {
+        interactingScript.madeChoice(false);
+        gameObject.SetActive(false);
+        interactingScript.enabled = true;
+        pickUpScript.enabled = true;
+        camControllerFPS.enabled = true;
+        playerMovementBehavior.enabled = true;
+        crosshair.SetActive(true);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        hasChoice = false;
     }
 }
