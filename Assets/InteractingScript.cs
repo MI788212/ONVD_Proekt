@@ -3,6 +3,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class InteractingScript : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class InteractingScript : MonoBehaviour
     public GameObject cluePaper;
     public GameObject safe;
     public GameObject key;
+    public GameObject prozor;
+    public GameObject bed;
+    public GameObject underBed;
 
     public GameObject textGuide;
     public GameObject textBox;
@@ -44,7 +48,8 @@ public class InteractingScript : MonoBehaviour
     public GameObject interactMess;
     public GameObject cookingMess;
 
-    private int choice; // 0: drink, 1: call...
+    private int choice; // 0: drink, 1: call, 2:take safe out, 3:to enter pass...
+    private bool tookSafeOut;
 
     public TextMeshProUGUI text;   // guideMess
     private int guideMessIndex = -1; // 0: try pick up, 1: try rotate..
@@ -52,9 +57,25 @@ public class InteractingScript : MonoBehaviour
     public float holdTime = 2f;         // How long it stays fully visible
     public float fadeOutTime = 1.5f;      // Duration to fade out
 
+    //screens
+    public GameObject phoneScreen;
+    private phoneScript phoneScript;
+    public GameObject underBedScreen;
+    public RawImage blackScreen;
+
+    //is this script active?
+    public bool unresponsive;
+
+    //phone placement relative to the camera and original phone placement
+    public Vector3 phoneOffset = new Vector3(-0.038f, -0.107f, 0.267f);
+    public Quaternion phoneRotationOffset = new Quaternion(-0.187f, -0.056f, 0.096f, 0.976f);
+    private Vector3 phoneOriginalPosition;
+    private Quaternion phoneOriginalRotation;
+
 
     void Awake()
     {
+        unresponsive = false;
         teaCupScript = fullTeaCup.GetComponent<teaCupScript>();
         textGuideScript = textGuide.GetComponent<textGuideScript>();
         dialogueScript = textBox.GetComponent<DialogueScript>();
@@ -65,7 +86,11 @@ public class InteractingScript : MonoBehaviour
         cookingMess.SetActive(false);
         dialogueScript.hasChoice = false;
         guideMessIndex = -1;
-
+        phoneScreen.SetActive(false);
+        phoneScript = phoneScreen.GetComponent<phoneScript>();
+        underBedScreen.SetActive(false);
+        blackScreen.enabled = false;
+        tookSafeOut = false;
     }
 
     private void Start()
@@ -80,34 +105,39 @@ public class InteractingScript : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        whilePickedUpMess.SetActive(pickUpScript.heldObj != null);
+        //whilePickedUpMess.SetActive(pickUpScript.heldObj != null);
         cookingMess.SetActive(warming);
 
         //interactMess.SetActive(Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canInteractWith") && pickUpScript.heldObj == null);
 
         if(guideMessIndex == 0)
         {
-            guideMessIndex++;
+            guideMessIndex=-1;
             ShowMessage("Try picking up an object with <<E>>");
         }
+        else if(guideMessIndex == 1)
+        {
+            guideMessIndex = -1;
+            ShowMessage("Rotate an object when picked up, by holding <<R>> and draging your mouse");
+        }
 
-        if (Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canPickUp") && pickUpScript.heldObj == null && !pickUpScript.justThrew)
+        if (Physics.Raycast(ray, out hit, rayDistance, interactLayer) && (hit.collider.gameObject.CompareTag("canPickUp")||hit.collider.gameObject.CompareTag("canInteractWith")) && pickUpScript.heldObj == null && !pickUpScript.justThrew && !unresponsive)
         {
             //pickUpMess.SetActive(true);
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                if(hit.collider.gameObject == fullTeaCup)
+                if (hit.collider.gameObject == fullTeaCup)
                 {
-                    if(warmedUp)
+                    if (warmedUp)
                     {
                         dialogueScript.lines.Clear();
-                        dialogueScript.lines.Add("It's warmed up.");
+                        //dialogueScript.lines.Add("It's warmed up.");
                         dialogueScript.lines.Add("Drink up?");
                         dialogueScript.hasChoice = true;
                         choice = 0;
                         textBox.SetActive(true);
                     }
-                    else if(!warming)
+                    else if (!warming)
                     {
                         dialogueScript.lines.Clear();
                         dialogueScript.lines.Add("Bleghhh...");
@@ -116,6 +146,58 @@ public class InteractingScript : MonoBehaviour
                         guideMessIndex = 0;
                         textBox.SetActive(true);
                     }
+                }
+                else if (hit.collider.gameObject == phone)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("Is there someone you want to call?"); 
+                    dialogueScript.hasChoice = true;
+                    choice = 1;
+                    textBox.SetActive(true);
+                }
+                else if(hit.collider.gameObject == emptyTeaCup)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("Still tasted yucky, but it warmed you up.");
+                    dialogueScript.lines.Add("And you seem to notice something...");
+                    textBox.SetActive(true);
+                    guideMessIndex = 1;
+                }
+                else if(hit.collider.gameObject == prozor)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("You don't feel compelled to question the void.");
+                    textBox.SetActive(true);
+                }
+                else if(hit.collider.gameObject == bed)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("You feel compelled to sleep.");
+                    textBox.SetActive(true);
+                }
+                else if(hit.collider.gameObject == underBed && !tookSafeOut)
+                {
+                    fadeInScreen(underBedScreen);
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("There's a safe tucked safely under the bed.");
+                    dialogueScript.lines.Add("Do you take it out?");
+                    dialogueScript.hasChoice = true;
+                    choice = 2;
+                    textBox.SetActive(true);
+                }
+                else if(hit.collider.gameObject == candle)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("This candle seems awfully warm.");
+                    textBox.SetActive(true);
+                }
+                else if(hit.collider.gameObject == safe)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("Ready to enter your password?");
+                    dialogueScript.hasChoice = true;
+                    choice = 3;
+                    textBox.SetActive(true);
                 }
             }
         }
@@ -146,14 +228,35 @@ public class InteractingScript : MonoBehaviour
                 pickUpScript.enabled = true;
 
                 dialogueScript.lines.Clear();
-                dialogueScript.lines.Add("It's warmed up.");
-                dialogueScript.lines.Add("Drink up?");
-                dialogueScript.hasChoice = true;
-                choice = 0;
+                dialogueScript.lines.Add("It warmed up.");
+                //dialogueScript.lines.Add("Drink up?");
+                //dialogueScript.hasChoice = true;
+                //choice = 0;
                 textBox.SetActive(true);
             }
         }
 
+    }
+
+    void fadeInScreen(GameObject screenObject)
+    {
+        screenObject.SetActive(true);
+        blackScreen.enabled = true;
+        blackScreen.color = new Color(0, 0, 0, 1);
+        StartCoroutine(FadeIn());
+    }
+
+    IEnumerator FadeIn()
+    {
+        float elapsed = 0f;
+        while (elapsed < 1.5f)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / 1.5f);
+            blackScreen.color = new Color(0, 0, 0, alpha);
+            yield return null;
+        }
+        blackScreen.color = new Color(0, 0, 0, 0); 
     }
 
     public void CupInWarmingArea()
@@ -174,24 +277,102 @@ public class InteractingScript : MonoBehaviour
                 if(yesChoice)
                 {
                     Debug.Log("drank tea");
-                    Debug.Log("Still tasted yucky, but it warmed you up. And you seem to notice something. Try rotating the cup by holding R and moving your mouse.");
                     fullTeaCup.SetActive(false);
                     emptyTeaCup.transform.position = fullTeaCup.transform.position;
                     emptyTeaCup.transform.rotation = fullTeaCup.transform.rotation;
                     emptyTeaCup.gameObject.SetActive(true);
 
-                    dialogueScript.lines.Clear();
-                    dialogueScript.lines.Add("Still tasted yucky, but it warmed you up. And you seem to notice something.");
-                    textBox.SetActive(true);
+                    StartCoroutine(DoAfterFrame());
                 }
                 else
                 {
                     Debug.Log("didnt drink tea");
                 }
                 break;
-
+            case 1:
+                if (yesChoice)
+                {
+                    Debug.Log("wants to call");
+                    phoneScreen.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("doesnt want to call");
+                }
+                break;
+            case 2:
+                underBedScreen.SetActive(false);
+                if (yesChoice)
+                {
+                    Debug.Log("takes the safe out");
+                    tookSafeOut = true;
+                    safe.transform.position = new Vector3(1.8526899f, 0.492f, 10.170080f);
+                    safe.transform.rotation = Quaternion.Euler(0, 279.273041f, 0);
+                    key.transform.position = safe.transform.Find("safe").position;
+                    key.transform.rotation = safe.transform.Find("safe").rotation;
+                }
+                else
+                {
+                    Debug.Log("doesnt take the safe out");
+                }
+                break;
+            case 3:
+                if (yesChoice)
+                {
+                    Debug.Log("ready to enter password");
+                }
+                else
+                {
+                    Debug.Log("not ready to enter password");
+                }
+                break;
             default: break;
         }
+    }
+
+    public void callThisNumber(string number)
+    {
+        if(number == "527")
+        {
+            Debug.Log("called the right number.");
+            phoneScreen.SetActive(false);
+            phoneOriginalPosition = phone.transform.position;
+            phoneOriginalRotation = phone.transform.rotation;
+            AttachPhone();
+
+        }
+        else
+        {
+            Debug.Log("called a wrong number.");
+        }
+    }
+
+    void AttachPhone()
+    {
+        Rigidbody rb = phone.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
+
+        phone.transform.SetParent(gameObject.transform);
+        phone.transform.localPosition = phoneOffset;
+        phone.transform.localRotation = phoneRotationOffset;
+
+        StartCoroutine(DetachAfterDelay(3f));
+    }
+
+    private IEnumerator DetachAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        DetachPhone();
+    }
+
+    void DetachPhone()
+    {
+        phone.transform.SetParent(null);
+
+        Rigidbody rb = phone.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = false;
+        phone.transform.position = phoneOriginalPosition;
+        phone.transform.rotation = phoneOriginalRotation;
     }
 
     public void ShowMessage(string message)
@@ -233,6 +414,19 @@ public class InteractingScript : MonoBehaviour
         }
         text.alpha = 0f;
     }
+
+    IEnumerator DoAfterFrame()
+    {
+        yield return null;
+        dialogueScript.lines.Clear();
+        dialogueScript.lines.Add("Still tasted yucky, but it warmed you up.");
+        dialogueScript.lines.Add("And you seem to notice something...");
+        textBox.SetActive(true);
+        guideMessIndex = 1;
+        Debug.Log("Still tasted yucky, but it warmed you up. And you seem to notice something. Try rotating the cup by holding R and moving your mouse.");
+    }
+
+
 }
 
 

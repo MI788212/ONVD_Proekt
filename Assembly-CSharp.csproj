@@ -63,15 +63,19 @@
   <ItemGroup>
     <Compile Include="Assets\cookingMessScript.cs" />
     <Compile Include="Assets\pickUpScript.cs" />
+    <Compile Include="Assets\LeftOfPhoneScript.cs" />
     <Compile Include="Assets\CameraControllerFPS.cs" />
     <Compile Include="Assets\noChoiceBoxScript.cs" />
     <Compile Include="Assets\InteractingScript.cs" />
     <Compile Include="Assets\teaCupScript.cs" />
     <Compile Include="Assets\DialogueScript.cs" />
+    <Compile Include="Assets\WasClickedScript.cs" />
     <Compile Include="Assets\textGuideScript.cs" />
     <Compile Include="Assets\PlayerMovementCC.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\yesChoiceBoxScript.cs" />
+    <Compile Include="Assets\phoneScript.cs" />
+    <Compile Include="Assets\RightOfPhoneScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

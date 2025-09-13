@@ -8,6 +8,7 @@ TagManager:
   - warmingArea
   - crosshair
   - canInteractWith
+  - phoneScreen
   layers:
   - Default
   - TransparentFX

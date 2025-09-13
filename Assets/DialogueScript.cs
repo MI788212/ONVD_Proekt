@@ -30,6 +30,7 @@ public class DialogueScript : MonoBehaviour
     }
     void OnEnable()
     {
+        //Debug.Log("textBox is enabled/set active");
         textComponent.text = string.Empty;
         StartDialogue();
         interactingScript.enabled = false;
@@ -43,7 +44,12 @@ public class DialogueScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (index == lines.Count - 1 && hasChoice)
+        if (index == lines.Count - 1 && hasChoice && Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            StopAllCoroutines();
+            textComponent.text = lines[index];
+        }
+        else if (index == lines.Count - 1 && hasChoice)
         {
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
@@ -51,7 +57,7 @@ public class DialogueScript : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if(textComponent.text == lines[index])
+            if (textComponent.text == lines[index])
             {
                 NextLine();
             }
@@ -88,7 +94,6 @@ public class DialogueScript : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
             interactingScript.enabled = true;
             pickUpScript.enabled = true;
             camControllerFPS.enabled = true;
@@ -97,13 +102,13 @@ public class DialogueScript : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             hasChoice = false;
+            gameObject.SetActive(false);
         }
     }
 
     public void choseYes()
     {
         interactingScript.madeChoice(true);
-        gameObject.SetActive(false);
         interactingScript.enabled = true;
         pickUpScript.enabled = true;
         camControllerFPS.enabled = true;
@@ -112,12 +117,12 @@ public class DialogueScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         hasChoice = false;
+        gameObject.SetActive(false);
 
     }
     public void choseNo() 
     {
         interactingScript.madeChoice(false);
-        gameObject.SetActive(false);
         interactingScript.enabled = true;
         pickUpScript.enabled = true;
         camControllerFPS.enabled = true;
@@ -126,5 +131,6 @@ public class DialogueScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         hasChoice = false;
+        gameObject.SetActive(false);
     }
 }
