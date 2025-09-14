@@ -20,6 +20,9 @@ public class InteractingScript : MonoBehaviour
     public GameObject prozor;
     public GameObject bed;
     public GameObject underBed;
+    public GameObject fioka1;
+    public GameObject fioka2;
+    public GameObject fioka3;
 
     public GameObject textGuide;
     public GameObject textBox;
@@ -50,6 +53,10 @@ public class InteractingScript : MonoBehaviour
 
     private int choice; // 0: drink, 1: call, 2:take safe out, 3:to enter pass...
     private bool tookSafeOut;
+    private bool safeOpened;
+    private bool fioka1opened;
+    private int fioka2indeks;
+
 
     public TextMeshProUGUI text;   // guideMess
     private int guideMessIndex = -1; // 0: try pick up, 1: try rotate..
@@ -62,6 +69,7 @@ public class InteractingScript : MonoBehaviour
     private phoneScript phoneScript;
     public GameObject underBedScreen;
     public RawImage blackScreen;
+    public GameObject safeScreen;
 
     //is this script active?
     public bool unresponsive;
@@ -91,6 +99,10 @@ public class InteractingScript : MonoBehaviour
         underBedScreen.SetActive(false);
         blackScreen.enabled = false;
         tookSafeOut = false;
+        safeScreen.SetActive(false);
+        safeOpened = false;
+        fioka1opened = false;
+        fioka2indeks = 0;
     }
 
     private void Start()
@@ -179,7 +191,7 @@ public class InteractingScript : MonoBehaviour
                 {
                     fadeInScreen(underBedScreen);
                     dialogueScript.lines.Clear();
-                    dialogueScript.lines.Add("There's a safe tucked safely under the bed.");
+                    dialogueScript.lines.Add("There's a safe safely tucked under the bed.");
                     dialogueScript.lines.Add("Do you take it out?");
                     dialogueScript.hasChoice = true;
                     choice = 2;
@@ -191,12 +203,60 @@ public class InteractingScript : MonoBehaviour
                     dialogueScript.lines.Add("This candle seems awfully warm.");
                     textBox.SetActive(true);
                 }
-                else if(hit.collider.gameObject == safe)
+                else if(hit.collider.gameObject == safe && !safeOpened)
                 {
                     dialogueScript.lines.Clear();
                     dialogueScript.lines.Add("Ready to enter your password?");
                     dialogueScript.hasChoice = true;
                     choice = 3;
+                    textBox.SetActive(true);
+                }
+                else if(hit.collider.gameObject == fioka1)
+                {
+                    if (!fioka1opened)
+                    {
+                        fioka1.transform.localPosition = new Vector3(-1.44603825f, 0.453433216f, 1.26699996f);
+                        fioka1opened = true;
+                    }
+                    else
+                    {
+                        fioka1.transform.localPosition = new Vector3(-1.44603825f, 0.453433216f, 1.65363026f);
+                        fioka1opened = false;
+                    }
+                }
+                else if(hit.collider.gameObject == fioka2)
+                {
+                    Debug.Log("trying to open fioka2");
+                    if (fioka2indeks <2)
+                    {
+                        fioka2indeks++;
+                    }
+                    else if ((fioka2indeks >= 2 && fioka2indeks < 5) || fioka2indeks == 6)
+                    {
+                        fioka2indeks++;
+                        fioka2.transform.localPosition += new Vector3(0, 0, -0.01f);
+                    }
+                    else if (fioka2indeks == 5 || fioka2indeks == 7)
+                    {
+                        fioka2indeks++;
+                        fioka2.transform.localPosition += new Vector3(0, 0, -0.1f);
+                    }
+                    else if(fioka2indeks == 8)
+                    {
+                        fioka2indeks = 9;
+                        fioka2.transform.localPosition += new Vector3(0, 0, -0.2f);
+                    }
+                    else if(fioka2indeks == 9)
+                    {
+                        fioka2indeks = 10;
+                        fioka2.transform.localPosition = new Vector3(0.25f, -0.0199999996f, -0.529999971f);
+                        fioka2.transform.localRotation = new Quaternion(-0.00165190746f, -0.0865471512f, -0.000143506564f, 0.996246397f);
+                    }
+                }
+                else if(hit.collider.gameObject == fioka3 && fioka2indeks!=10)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("This one is completely shut.");
                     textBox.SetActive(true);
                 }
             }
@@ -249,14 +309,15 @@ public class InteractingScript : MonoBehaviour
     IEnumerator FadeIn()
     {
         float elapsed = 0f;
-        while (elapsed < 1.5f)
+        while (elapsed < 1f)
         {
             elapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, elapsed / 1.5f);
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / 1f);
             blackScreen.color = new Color(0, 0, 0, alpha);
             yield return null;
         }
         blackScreen.color = new Color(0, 0, 0, 0); 
+        blackScreen.enabled=false;
     }
 
     public void CupInWarmingArea()
@@ -320,6 +381,7 @@ public class InteractingScript : MonoBehaviour
                 if (yesChoice)
                 {
                     Debug.Log("ready to enter password");
+                    fadeInScreen(safeScreen);
                 }
                 else
                 {
@@ -373,6 +435,23 @@ public class InteractingScript : MonoBehaviour
         if (rb != null) rb.isKinematic = false;
         phone.transform.position = phoneOriginalPosition;
         phone.transform.rotation = phoneOriginalRotation;
+    }
+
+    public void enterThisPin(string number)
+    {
+        if (number == "123")
+        {
+            Debug.Log("entered the right pin.");
+            safeScreen.SetActive(false);
+            safe.transform.Find("safe_door").transform.localPosition = new Vector3(0.5312f, 0.1019339f, 0.4281f);
+            safe.transform.Find("safe_door").transform.localRotation = Quaternion.Euler(0f, -128.281f, -180f);
+            safeOpened = true;
+            safe.GetComponent<BoxCollider>().enabled = false;
+        }
+        else
+        {
+            Debug.Log("entered the wrong pin.");
+        }
     }
 
     public void ShowMessage(string message)

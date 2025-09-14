@@ -1,7 +1,8 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class phoneScript : MonoBehaviour
+public class SafeScript : MonoBehaviour, IPointerClickHandler
 {
     public GameObject mainCamera;
     private InteractingScript interactingScript;
@@ -10,9 +11,8 @@ public class phoneScript : MonoBehaviour
     private CameraControllerFPS camControllerFPS;
     private PlayerMovementBehavior playerMovementBehavior;
     public GameObject crosshair;
-    public GameObject phone;
 
-    //calling number
+    //pin number
     private string number;
 
     private void Awake()
@@ -22,20 +22,9 @@ public class phoneScript : MonoBehaviour
         camControllerFPS = mainCamera.GetComponent<CameraControllerFPS>();
         playerMovementBehavior = player.GetComponent<PlayerMovementBehavior>();
     }
-    //void OnEnable()
-    //{
-    //    Debug.Log("OnEnable phoneScript start");
-    //    interactingScript.enabled = false;
-    //    pickUpScript.enabled = false;
-    //    camControllerFPS.enabled = false;
-    //    playerMovementBehavior.enabled = false;
-    //    crosshair.SetActive(false);
-    //    Debug.Log("OnEnable phoneScript end");
-    //}
 
     void OnEnable()
     {
-        //Debug.Log("OnEnable phoneScript start");
         number = "";
         StartCoroutine(DisableNextFrame());
     }
@@ -52,32 +41,25 @@ public class phoneScript : MonoBehaviour
         Debug.Log("Actually disabled after one frame");
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
-        phone.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        
+        wasClicked(gameObject.name);
     }
 
     public void wasClicked(string name)
     {
         Debug.Log(name + " was clicked!");
-        if (name == "callButton")
-        {
-            interactingScript.callThisNumber(number);
-            number = "";
-        }
-        else if(name == "button1")
+        if (name == "button1")
         {
             number += "1";
         }
-        else if(name == "button2")
+        else if (name == "button2")
         {
             number += "2";
         }
-        else if(name == "button3")
+        else if (name == "button3")
         {
             number += "3";
         }
@@ -109,10 +91,20 @@ public class phoneScript : MonoBehaviour
         {
             number += "0";
         }
-        else if (name == "leftOfPhone" || name == "rightOfPhone")
+        else if (name == "buttonC")
+        {
+            number = "";
+        }
+        else if (name == "buttonE")
+        {
+            interactingScript.enterThisPin(number);
+            number = "";
+        }
+        else if (name == "safeScreen")
         {
             gameObject.SetActive(false);
         }
+
     }
 
     public void OnDisable()
@@ -125,6 +117,5 @@ public class phoneScript : MonoBehaviour
         crosshair.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        phone.SetActive(true);
     }
 }
