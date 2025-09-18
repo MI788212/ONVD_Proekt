@@ -10,6 +10,8 @@ TagManager:
   - canInteractWith
   - phoneScreen
   - safeScreen
+  - phonebookScreen
+  - cluePaperScreen
   layers:
   - Default
   - TransparentFX

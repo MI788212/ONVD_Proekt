@@ -23,6 +23,7 @@ public class InteractingScript : MonoBehaviour
     public GameObject fioka1;
     public GameObject fioka2;
     public GameObject fioka3;
+    public GameObject phonebook;
 
     public GameObject textGuide;
     public GameObject textBox;
@@ -51,17 +52,18 @@ public class InteractingScript : MonoBehaviour
     public GameObject interactMess;
     public GameObject cookingMess;
 
-    private int choice; // 0: drink, 1: call, 2:take safe out, 3:to enter pass...
+    private int choice; // 0: drink, 1: call, 2:take safe out, 3:to enter pass, 4:phonebook, 5:clue paper
     private bool tookSafeOut;
     private bool safeOpened;
     private bool fioka1opened;
     private int fioka2indeks;
+    private bool fioka2opened;
 
 
     public TextMeshProUGUI text;   // guideMess
     private int guideMessIndex = -1; // 0: try pick up, 1: try rotate..
     public float fadeInTime = 0.5f;     // Duration to fade in
-    public float holdTime = 2f;         // How long it stays fully visible
+    public float holdTime = 2f;         // How long it stays fully visible, DISABLED
     public float fadeOutTime = 1.5f;      // Duration to fade out
 
     //screens
@@ -70,6 +72,8 @@ public class InteractingScript : MonoBehaviour
     public GameObject underBedScreen;
     public RawImage blackScreen;
     public GameObject safeScreen;
+    public GameObject phonebookScreen;
+    public GameObject cluePaperScreen;
 
     //is this script active?
     public bool unresponsive;
@@ -103,6 +107,9 @@ public class InteractingScript : MonoBehaviour
         safeOpened = false;
         fioka1opened = false;
         fioka2indeks = 0;
+        fioka2opened = false;
+        phonebookScreen.SetActive(false);
+        cluePaperScreen.SetActive(false);
     }
 
     private void Start()
@@ -125,12 +132,12 @@ public class InteractingScript : MonoBehaviour
         if(guideMessIndex == 0)
         {
             guideMessIndex=-1;
-            ShowMessage("Try picking up an object with <<E>>");
+            ShowMessage("Try picking up an object with <<E>>",3f);
         }
         else if(guideMessIndex == 1)
         {
             guideMessIndex = -1;
-            ShowMessage("Rotate an object when picked up, by holding <<R>> and draging your mouse");
+            ShowMessage("Rotate an object when picked up, by holding <<R>> and draging your mouse",4f);
         }
 
         if (Physics.Raycast(ray, out hit, rayDistance, interactLayer) && (hit.collider.gameObject.CompareTag("canPickUp")||hit.collider.gameObject.CompareTag("canInteractWith")) && pickUpScript.heldObj == null && !pickUpScript.justThrew && !unresponsive)
@@ -226,37 +233,64 @@ public class InteractingScript : MonoBehaviour
                 }
                 else if(hit.collider.gameObject == fioka2)
                 {
-                    Debug.Log("trying to open fioka2");
-                    if (fioka2indeks <2)
+                    if (!fioka2opened)
                     {
-                        fioka2indeks++;
+                        fioka2opened = true;
+                        fioka2.transform.localPosition += new Vector3(0, 0, -0.4f);
                     }
-                    else if ((fioka2indeks >= 2 && fioka2indeks < 5) || fioka2indeks == 6)
+                    else
                     {
-                        fioka2indeks++;
-                        fioka2.transform.localPosition += new Vector3(0, 0, -0.01f);
+                        fioka2opened= false;
+                        fioka2.transform.localPosition += new Vector3(0, 0, 0.4f);
                     }
-                    else if (fioka2indeks == 5 || fioka2indeks == 7)
-                    {
-                        fioka2indeks++;
-                        fioka2.transform.localPosition += new Vector3(0, 0, -0.1f);
-                    }
-                    else if(fioka2indeks == 8)
-                    {
-                        fioka2indeks = 9;
-                        fioka2.transform.localPosition += new Vector3(0, 0, -0.2f);
-                    }
-                    else if(fioka2indeks == 9)
-                    {
-                        fioka2indeks = 10;
-                        fioka2.transform.localPosition = new Vector3(0.25f, -0.0199999996f, -0.529999971f);
-                        fioka2.transform.localRotation = new Quaternion(-0.00165190746f, -0.0865471512f, -0.000143506564f, 0.996246397f);
-                    }
+                    //Debug.Log("trying to open fioka2");
+                    //if (fioka2indeks <2)
+                    //{
+                    //    fioka2indeks++;
+                    //}
+                    //else if ((fioka2indeks >= 2 && fioka2indeks < 5) || fioka2indeks == 6)
+                    //{
+                    //    fioka2indeks++;
+                    //    fioka2.transform.localPosition += new Vector3(0, 0, -0.01f);
+                    //}
+                    //else if (fioka2indeks == 5 || fioka2indeks == 7)
+                    //{
+                    //    fioka2indeks++;
+                    //    fioka2.transform.localPosition += new Vector3(0, 0, -0.1f);
+                    //}
+                    //else if(fioka2indeks == 8)
+                    //{
+                    //    fioka2indeks = 9;
+                    //    fioka2.transform.localPosition += new Vector3(0, 0, -0.2f);
+                    //}
+                    //else if(fioka2indeks == 9)
+                    //{
+                    //    fioka2indeks = 10;
+                    //    fioka2.transform.localPosition = new Vector3(0.25f, -0.0199999996f, -0.529999971f);
+                    //    fioka2.transform.localRotation = new Quaternion(-0.00165190746f, -0.0865471512f, -0.000143506564f, 0.996246397f);
+                    //}
                 }
                 else if(hit.collider.gameObject == fioka3 && fioka2indeks!=10)
                 {
                     dialogueScript.lines.Clear();
                     dialogueScript.lines.Add("This one is completely shut.");
+                    textBox.SetActive(true);
+                }
+                else if (hit.collider.gameObject == phonebook)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("It's a phone book.");
+                    dialogueScript.lines.Add("Do you open it?");
+                    dialogueScript.hasChoice = true;
+                    choice = 4;
+                    textBox.SetActive(true);
+                }
+                else if(hit.collider.gameObject == cluePaper)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("Do you want to see it up close?");
+                    dialogueScript.hasChoice = true;
+                    choice = 5;
                     textBox.SetActive(true);
                 }
             }
@@ -388,13 +422,35 @@ public class InteractingScript : MonoBehaviour
                     Debug.Log("not ready to enter password");
                 }
                 break;
+            case 4:
+                if (yesChoice)
+                {
+                    Debug.Log("opens phonebook");
+                    phonebookScreen.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("doesnt open phonebook");
+                }
+                break;
+            case 5:
+                if (yesChoice)
+                {
+                    Debug.Log("see clue paper up close");
+                    cluePaperScreen.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("dont see clue paper up close");
+                }
+                break;
             default: break;
         }
     }
 
     public void callThisNumber(string number)
     {
-        if(number == "527")
+        if(number == "5552781022")
         {
             Debug.Log("called the right number.");
             phoneScreen.SetActive(false);
@@ -439,7 +495,7 @@ public class InteractingScript : MonoBehaviour
 
     public void enterThisPin(string number)
     {
-        if (number == "123")
+        if (number == "2507")
         {
             Debug.Log("entered the right pin.");
             safeScreen.SetActive(false);
@@ -454,13 +510,13 @@ public class InteractingScript : MonoBehaviour
         }
     }
 
-    public void ShowMessage(string message)
+    public void ShowMessage(string message, float holdTime = 2f)
     {
         StopAllCoroutines();            
-        StartCoroutine(FadeInOut(message));
+        StartCoroutine(FadeInOut(message,holdTime));
     }
 
-    private IEnumerator FadeInOut(string message)
+    private IEnumerator FadeInOut(string message, float holdTime)
     {
         text.text = message;
 
