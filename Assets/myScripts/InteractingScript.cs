@@ -24,6 +24,8 @@ public class InteractingScript : MonoBehaviour
     public GameObject fioka2;
     public GameObject fioka3;
     public GameObject phonebook;
+    public GameObject door;
+    public GameObject doorKnob;
 
     public GameObject textGuide;
     public GameObject textBox;
@@ -34,6 +36,7 @@ public class InteractingScript : MonoBehaviour
     private teaCupScript teaCupScript;
     private textGuideScript textGuideScript;
     private DialogueScript dialogueScript;
+    private AudioManagerScript audioManagerScript;
 
     public float rayDistance = 5f;
     public LayerMask interactLayer;
@@ -110,6 +113,7 @@ public class InteractingScript : MonoBehaviour
         fioka2opened = false;
         phonebookScreen.SetActive(false);
         cluePaperScreen.SetActive(false);
+        audioManagerScript = GameObject.FindGameObjectWithTag("audioManager").GetComponent<AudioManagerScript>();
     }
 
     private void Start()
@@ -293,6 +297,12 @@ public class InteractingScript : MonoBehaviour
                     choice = 5;
                     textBox.SetActive(true);
                 }
+                else if(hit.collider.gameObject == door || hit.collider.gameObject == doorKnob)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("You try the door, but it won't budge.");
+                    textBox.SetActive(true);
+                }
             }
         }
         else
@@ -456,6 +466,7 @@ public class InteractingScript : MonoBehaviour
             phoneScreen.SetActive(false);
             phoneOriginalPosition = phone.transform.position;
             phoneOriginalRotation = phone.transform.rotation;
+            audioManagerScript.PlaySFX(audioManagerScript.phoneCall);
             AttachPhone();
 
         }
@@ -474,7 +485,7 @@ public class InteractingScript : MonoBehaviour
         phone.transform.localPosition = phoneOffset;
         phone.transform.localRotation = phoneRotationOffset;
 
-        StartCoroutine(DetachAfterDelay(3f));
+        StartCoroutine(DetachAfterDelay(21.4f));
     }
 
     private IEnumerator DetachAfterDelay(float delay)

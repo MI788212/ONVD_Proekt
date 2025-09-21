@@ -14,6 +14,8 @@ public class phoneScript : MonoBehaviour
 
     //calling number
     private string number;
+    private int counter;
+    private string lastNumber;
 
     private void Awake()
     {
@@ -21,6 +23,8 @@ public class phoneScript : MonoBehaviour
         pickUpScript = mainCamera.GetComponent<PickUpScript>();
         camControllerFPS = mainCamera.GetComponent<CameraControllerFPS>();
         playerMovementBehavior = player.GetComponent<PlayerMovementBehavior>();
+        counter = 0;
+        lastNumber = "";
     }
     //void OnEnable()
     //{
@@ -58,56 +62,72 @@ public class phoneScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(counter == 10)
+        {
+            lastNumber = number;
+            counter = 0;
+            interactingScript.callThisNumber(number);
+        }
     }
 
     public void wasClicked(string name)
     {
         Debug.Log(name + " was clicked!");
-        if (name == "callButton")
+        if (name == "redialButton")
         {
-            interactingScript.callThisNumber(number);
-            number = "";
+            Debug.Log("redialing");
+            interactingScript.callThisNumber(lastNumber);
+            //number = "";
         }
         else if(name == "button1")
         {
             number += "1";
+            counter++;
         }
         else if(name == "button2")
         {
             number += "2";
+            counter++;
         }
         else if(name == "button3")
         {
             number += "3";
+            counter++;
         }
         else if (name == "button4")
         {
             number += "4";
+            counter++;
         }
         else if (name == "button5")
         {
             number += "5";
+            counter++;
         }
         else if (name == "button6")
         {
             number += "6";
+            counter++;
         }
         else if (name == "button7")
         {
             number += "7";
+            counter++;
         }
         else if (name == "button8")
         {
             number += "8";
+            counter++;
         }
         else if (name == "button9")
         {
             number += "9";
+            counter++;
         }
         else if (name == "button0")
         {
             number += "0";
+            counter++;
         }
         else if (name == "leftOfPhone" || name == "rightOfPhone")
         {

@@ -12,6 +12,7 @@ TagManager:
   - safeScreen
   - phonebookScreen
   - cluePaperScreen
+  - audioManager
   layers:
   - Default
   - TransparentFX

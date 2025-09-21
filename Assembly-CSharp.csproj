@@ -61,29 +61,31 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.1.13f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\cookingMessScript.cs" />
-    <Compile Include="Assets\pickUpScript.cs" />
-    <Compile Include="Assets\LeftOfPhoneScript.cs" />
-    <Compile Include="Assets\CameraControllerFPS.cs" />
-    <Compile Include="Assets\CluePaperScript.cs" />
-    <Compile Include="Assets\noChoiceBoxScript.cs" />
-    <Compile Include="Assets\InteractingScript.cs" />
-    <Compile Include="Assets\safeButtonWasClickedScript.cs" />
-    <Compile Include="Assets\teaCupScript.cs" />
-    <Compile Include="Assets\PhonebookBackgroundScript.cs" />
-    <Compile Include="Assets\DialogueScript.cs" />
-    <Compile Include="Assets\WasClickedScript.cs" />
-    <Compile Include="Assets\paperAreaScript.cs" />
-    <Compile Include="Assets\textGuideScript.cs" />
-    <Compile Include="Assets\PlayerMovementCC.cs" />
+    <Compile Include="Assets\myScripts\pickUpScript.cs" />
+    <Compile Include="Assets\myScripts\phoneScript.cs" />
+    <Compile Include="Assets\myScripts\phonebookScript.cs" />
+    <Compile Include="Assets\myScripts\safeButtonWasClickedScript.cs" />
+    <Compile Include="Assets\myScripts\pagesScript.cs" />
+    <Compile Include="Assets\myScripts\CameraControllerFPS.cs" />
+    <Compile Include="Assets\myScripts\WasClickedScript.cs" />
+    <Compile Include="Assets\myScripts\SafeScript.cs" />
+    <Compile Include="Assets\myScripts\AudioManagerScript.cs" />
+    <Compile Include="Assets\myScripts\CluePaperBackgroundScript.cs" />
+    <Compile Include="Assets\myScripts\cookingMessScript.cs" />
+    <Compile Include="Assets\myScripts\RightOfPhoneScript.cs" />
+    <Compile Include="Assets\myScripts\textGuideScript.cs" />
+    <Compile Include="Assets\myScripts\yesChoiceBoxScript.cs" />
+    <Compile Include="Assets\myScripts\PhonebookBackgroundScript.cs" />
+    <Compile Include="Assets\myScripts\paperAreaScript.cs" />
+    <Compile Include="Assets\myScripts\LeftOfPhoneScript.cs" />
+    <Compile Include="Assets\myScripts\CluePaperScript.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
-    <Compile Include="Assets\pagesScript.cs" />
-    <Compile Include="Assets\yesChoiceBoxScript.cs" />
-    <Compile Include="Assets\phonebookScript.cs" />
-    <Compile Include="Assets\SafeScript.cs" />
-    <Compile Include="Assets\CluePaperBackgroundScript.cs" />
-    <Compile Include="Assets\phoneScript.cs" />
-    <Compile Include="Assets\RightOfPhoneScript.cs" />
+    <Compile Include="Assets\myScripts\DialogueScript.cs" />
+    <Compile Include="Assets\myScripts\PlayerMovementCC.cs" />
+    <Compile Include="Assets\myScripts\lightFlickerScript.cs" />
+    <Compile Include="Assets\myScripts\teaCupScript.cs" />
+    <Compile Include="Assets\myScripts\InteractingScript.cs" />
+    <Compile Include="Assets\myScripts\noChoiceBoxScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
