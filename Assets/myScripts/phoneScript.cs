@@ -12,10 +12,13 @@ public class phoneScript : MonoBehaviour
     public GameObject crosshair;
     public GameObject phone;
 
+    private AudioManagerScript audioManagerScript;
+
     //calling number
     private string number;
     private int counter;
     private string lastNumber;
+    private bool dialingDisabled;
 
     private void Awake()
     {
@@ -25,6 +28,8 @@ public class phoneScript : MonoBehaviour
         playerMovementBehavior = player.GetComponent<PlayerMovementBehavior>();
         counter = 0;
         lastNumber = "";
+        audioManagerScript = GameObject.FindGameObjectWithTag("audioManager").GetComponent<AudioManagerScript>();
+        dialingDisabled = false;
     }
     //void OnEnable()
     //{
@@ -42,6 +47,7 @@ public class phoneScript : MonoBehaviour
         //Debug.Log("OnEnable phoneScript start");
         number = "";
         StartCoroutine(DisableNextFrame());
+        dialingDisabled = false;
     }
 
     IEnumerator DisableNextFrame()
@@ -57,6 +63,7 @@ public class phoneScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
         phone.SetActive(false);
+        audioManagerScript.PlayLoop(audioManagerScript.dialTone);
     }
 
     // Update is called once per frame
@@ -64,75 +71,100 @@ public class phoneScript : MonoBehaviour
     {
         if(counter == 10)
         {
+            dialingDisabled = true;
             lastNumber = number;
             counter = 0;
-            interactingScript.callThisNumber(number);
+            StartCoroutine(WaitTime(0.2f));
         }
     }
 
     public void wasClicked(string name)
     {
-        Debug.Log(name + " was clicked!");
-        if (name == "redialButton")
+        if (!dialingDisabled)
         {
-            Debug.Log("redialing");
-            interactingScript.callThisNumber(lastNumber);
-            //number = "";
+            Debug.Log(name + " was clicked!");
+            if (name == "redialButton")
+            {
+                Debug.Log("redialing");
+                audioManagerScript.PlaySFX(audioManagerScript.redialButton);
+                interactingScript.callThisNumber(lastNumber);
+                //number = "";
+            }
+            else if (name == "button1")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button1);
+                number += "1";
+                counter++;
+            }
+            else if (name == "button2")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button2);
+                number += "2";
+                counter++;
+            }
+            else if (name == "button3")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button3);
+                number += "3";
+                counter++;
+            }
+            else if (name == "button4")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button4);
+                number += "4";
+                counter++;
+            }
+            else if (name == "button5")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button5);
+                number += "5";
+                counter++;
+            }
+            else if (name == "button6")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button6);
+                number += "6";
+                counter++;
+            }
+            else if (name == "button7")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button7);
+                number += "7";
+                counter++;
+            }
+            else if (name == "button8")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button8);
+                number += "8";
+                counter++;
+            }
+            else if (name == "button9")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button9);
+                number += "9";
+                counter++;
+            }
+            else if (name == "button0")
+            {
+                audioManagerScript.PlaySFX(audioManagerScript.button0);
+                number += "0";
+                counter++;
+            }
+            else if (name == "leftOfPhone" || name == "rightOfPhone")
+            {
+                gameObject.SetActive(false);
+            }
         }
-        else if(name == "button1")
-        {
-            number += "1";
-            counter++;
-        }
-        else if(name == "button2")
-        {
-            number += "2";
-            counter++;
-        }
-        else if(name == "button3")
-        {
-            number += "3";
-            counter++;
-        }
-        else if (name == "button4")
-        {
-            number += "4";
-            counter++;
-        }
-        else if (name == "button5")
-        {
-            number += "5";
-            counter++;
-        }
-        else if (name == "button6")
-        {
-            number += "6";
-            counter++;
-        }
-        else if (name == "button7")
-        {
-            number += "7";
-            counter++;
-        }
-        else if (name == "button8")
-        {
-            number += "8";
-            counter++;
-        }
-        else if (name == "button9")
-        {
-            number += "9";
-            counter++;
-        }
-        else if (name == "button0")
-        {
-            number += "0";
-            counter++;
-        }
-        else if (name == "leftOfPhone" || name == "rightOfPhone")
-        {
-            gameObject.SetActive(false);
-        }
+    }
+
+    IEnumerator WaitTime(float time = 0.2f)
+    {
+        yield return new WaitForSeconds(time); // wait exactly 0.2 seconds
+        Debug.Log("0.2 seconds passed!");
+
+        interactingScript.callThisNumber(number);
+        number = "";
+        dialingDisabled = false;
     }
 
     public void OnDisable()
@@ -146,5 +178,6 @@ public class phoneScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         phone.SetActive(true);
+        audioManagerScript.StopLoop();
     }
 }

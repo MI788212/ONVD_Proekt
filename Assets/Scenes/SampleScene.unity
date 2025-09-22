@@ -8485,7 +8485,7 @@ GameObject:
   - component: {fileID: 1286399137}
   - component: {fileID: 1286399136}
   m_Layer: 0
-  m_Name: phoneCallSource
+  m_Name: audioSource
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11108,6 +11108,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1286399136}
   phoneCall: {fileID: 8300000, guid: 46cc6c5045d53394b83314cda8936581, type: 3}
+  button1: {fileID: 8300000, guid: 484497373bb2575438ce11a44861051c, type: 3}
+  button2: {fileID: 8300000, guid: 095324a35e5315e41bf1e9016f13249a, type: 3}
+  button3: {fileID: 8300000, guid: 2a2487888d251104f836746280e4e8b5, type: 3}
+  button4: {fileID: 8300000, guid: c76e0deacbf8bf542b47af4cda25f015, type: 3}
+  button5: {fileID: 8300000, guid: c5f8a49374e8e95478ea3479986f9ff4, type: 3}
+  button6: {fileID: 8300000, guid: 448c2542dab76c14fabc8f33aaebec9f, type: 3}
+  button7: {fileID: 8300000, guid: 42aa05bcb73f6d64ebcda32176d19722, type: 3}
+  button8: {fileID: 8300000, guid: 73ef49bb73c190d48961d2d8af03f408, type: 3}
+  button9: {fileID: 8300000, guid: 6c268b79031b60f40bd585588761a131, type: 3}
+  button0: {fileID: 8300000, guid: cdaabbe3290f2b849b5579ab11ebf842, type: 3}
+  redialButton: {fileID: 8300000, guid: 90a94de63765a0f48a35570094bdc95f, type: 3}
+  dialTone: {fileID: 8300000, guid: 6b450431d705ac9468e355d966a49540, type: 3}
+  wrongCall: {fileID: 8300000, guid: 133ae356fa1be7b46afc142882cecf9d, type: 3}
 --- !u!1 &1853291873
 GameObject:
   m_ObjectHideFlags: 0

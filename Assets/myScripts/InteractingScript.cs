@@ -467,16 +467,21 @@ public class InteractingScript : MonoBehaviour
             phoneOriginalPosition = phone.transform.position;
             phoneOriginalRotation = phone.transform.rotation;
             audioManagerScript.PlaySFX(audioManagerScript.phoneCall);
-            AttachPhone();
+            AttachPhone(21.4f);
 
         }
         else
         {
             Debug.Log("called a wrong number.");
+            phoneScreen.SetActive(false);
+            phoneOriginalPosition = phone.transform.position;
+            phoneOriginalRotation = phone.transform.rotation;
+            audioManagerScript.PlaySFX(audioManagerScript.wrongCall);
+            AttachPhone(9);
         }
     }
 
-    void AttachPhone()
+    void AttachPhone(float delay = 1f)
     {
         Rigidbody rb = phone.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
@@ -485,7 +490,7 @@ public class InteractingScript : MonoBehaviour
         phone.transform.localPosition = phoneOffset;
         phone.transform.localRotation = phoneRotationOffset;
 
-        StartCoroutine(DetachAfterDelay(21.4f));
+        StartCoroutine(DetachAfterDelay(delay));
     }
 
     private IEnumerator DetachAfterDelay(float delay)
