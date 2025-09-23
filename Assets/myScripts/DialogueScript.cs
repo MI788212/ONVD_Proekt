@@ -19,7 +19,9 @@ public class DialogueScript : MonoBehaviour
     public GameObject crosshair;
     public bool hasChoice = false;
     public GameObject choiceBoxes;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private AudioSource audioSource;
+    public AudioClip letterSound;
 
     private void Awake()
     {
@@ -27,6 +29,7 @@ public class DialogueScript : MonoBehaviour
         pickUpScript= mainCamera.GetComponent<PickUpScript>();
         camControllerFPS = mainCamera.GetComponent<CameraControllerFPS>();
         playerMovementBehavior = player.GetComponent<PlayerMovementBehavior>();
+        audioSource = GetComponent<AudioSource>();
     }
     void OnEnable()
     {
@@ -34,6 +37,7 @@ public class DialogueScript : MonoBehaviour
         textComponent.text = string.Empty;
         StartDialogue();
         interactingScript.enabled = false;
+        interactingScript.unresponsive = true;
         pickUpScript.enabled = false;
         camControllerFPS.enabled = false;
         playerMovementBehavior.enabled = false;
@@ -80,6 +84,7 @@ public class DialogueScript : MonoBehaviour
         foreach (char c in lines[index].ToCharArray())
         {
             textComponent.text += c;
+            audioSource.PlayOneShot(letterSound);
             yield return new WaitForSeconds(textSpeed);
         }
     }
@@ -94,14 +99,6 @@ public class DialogueScript : MonoBehaviour
         }
         else
         {
-            interactingScript.enabled = true;
-            pickUpScript.enabled = true;
-            camControllerFPS.enabled = true;
-            playerMovementBehavior.enabled = true;
-            crosshair.SetActive(true);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            hasChoice = false;
             gameObject.SetActive(false);
         }
     }
@@ -109,21 +106,19 @@ public class DialogueScript : MonoBehaviour
     public void choseYes()
     {
         interactingScript.madeChoice(true);
-        interactingScript.enabled = true;
-        pickUpScript.enabled = true;
-        camControllerFPS.enabled = true;
-        playerMovementBehavior.enabled = true;
-        crosshair.SetActive(true);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        hasChoice = false;
         gameObject.SetActive(false);
 
     }
     public void choseNo() 
     {
         interactingScript.madeChoice(false);
+        gameObject.SetActive(false);
+    }
+
+    public void OnDisable()
+    {
         interactingScript.enabled = true;
+        interactingScript.unresponsive = false;
         pickUpScript.enabled = true;
         camControllerFPS.enabled = true;
         playerMovementBehavior.enabled = true;
@@ -131,6 +126,5 @@ public class DialogueScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         hasChoice = false;
-        gameObject.SetActive(false);
     }
 }

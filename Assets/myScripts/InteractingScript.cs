@@ -3,6 +3,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using System.Collections;
+using System;
 using UnityEngine.UI;
 
 public class InteractingScript : MonoBehaviour
@@ -37,6 +38,7 @@ public class InteractingScript : MonoBehaviour
     private textGuideScript textGuideScript;
     private DialogueScript dialogueScript;
     private AudioManagerScript audioManagerScript;
+    private PlayerMovementBehavior playerMovementBehavior;
 
     public float rayDistance = 5f;
     public LayerMask interactLayer;
@@ -78,6 +80,8 @@ public class InteractingScript : MonoBehaviour
     public GameObject phonebookScreen;
     public GameObject cluePaperScreen;
 
+    public GameObject crossHair;
+
     //is this script active?
     public bool unresponsive;
 
@@ -114,6 +118,8 @@ public class InteractingScript : MonoBehaviour
         phonebookScreen.SetActive(false);
         cluePaperScreen.SetActive(false);
         audioManagerScript = GameObject.FindGameObjectWithTag("audioManager").GetComponent<AudioManagerScript>();
+        crossHair.SetActive(true);
+        playerMovementBehavior = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementBehavior>();
     }
 
     private void Start()
@@ -226,11 +232,13 @@ public class InteractingScript : MonoBehaviour
                 {
                     if (!fioka1opened)
                     {
+                        audioManagerScript.PlaySFX(audioManagerScript.openDrawer);
                         fioka1.transform.localPosition = new Vector3(-1.44603825f, 0.453433216f, 1.26699996f);
                         fioka1opened = true;
                     }
                     else
                     {
+                        audioManagerScript.PlaySFX(audioManagerScript.closeDrawer);
                         fioka1.transform.localPosition = new Vector3(-1.44603825f, 0.453433216f, 1.65363026f);
                         fioka1opened = false;
                     }
@@ -239,12 +247,14 @@ public class InteractingScript : MonoBehaviour
                 {
                     if (!fioka2opened)
                     {
+                        audioManagerScript.PlaySFX(audioManagerScript.openDrawer);
                         fioka2opened = true;
                         fioka2.transform.localPosition += new Vector3(0, 0, -0.4f);
                     }
                     else
                     {
-                        fioka2opened= false;
+                        audioManagerScript.PlaySFX(audioManagerScript.closeDrawer);
+                        fioka2opened = false;
                         fioka2.transform.localPosition += new Vector3(0, 0, 0.4f);
                     }
                     //Debug.Log("trying to open fioka2");
@@ -276,9 +286,17 @@ public class InteractingScript : MonoBehaviour
                 }
                 else if(hit.collider.gameObject == fioka3 && fioka2indeks!=10)
                 {
+                    audioManagerScript.PlaySFX(audioManagerScript.lockedDrawer);
+                    unresponsive = true;
+                    pickUpScript.enabled = false;
+                    cameraControllerFPS.enabled = false;
+                    crossHair.SetActive(false);
+                    playerMovementBehavior.enabled = false;
+                    WaitSeconds(0.5f, () => {
                     dialogueScript.lines.Clear();
                     dialogueScript.lines.Add("This one is completely shut.");
                     textBox.SetActive(true);
+                    });
                 }
                 else if (hit.collider.gameObject == phonebook)
                 {
@@ -299,9 +317,17 @@ public class InteractingScript : MonoBehaviour
                 }
                 else if(hit.collider.gameObject == door || hit.collider.gameObject == doorKnob)
                 {
-                    dialogueScript.lines.Clear();
-                    dialogueScript.lines.Add("You try the door, but it won't budge.");
-                    textBox.SetActive(true);
+                    audioManagerScript.PlaySFX(audioManagerScript.lockedDoor);
+                    unresponsive = true;
+                    pickUpScript.enabled = false;
+                    cameraControllerFPS.enabled = false;
+                    crossHair.SetActive(false);
+                    playerMovementBehavior.enabled = false;
+                    WaitSeconds(0.7f, () => {
+                        dialogueScript.lines.Clear();
+                        dialogueScript.lines.Add("You try the door, but it won't budge.");
+                        textBox.SetActive(true);
+                    });
                 }
             }
         }
@@ -382,12 +408,20 @@ public class InteractingScript : MonoBehaviour
                 if(yesChoice)
                 {
                     Debug.Log("drank tea");
-                    fullTeaCup.SetActive(false);
-                    emptyTeaCup.transform.position = fullTeaCup.transform.position;
-                    emptyTeaCup.transform.rotation = fullTeaCup.transform.rotation;
-                    emptyTeaCup.gameObject.SetActive(true);
+                    audioManagerScript.PlaySFX(audioManagerScript.slurp);
+                    unresponsive = true;
+                    pickUpScript.enabled = false;
+                    cameraControllerFPS.enabled = false;
+                    crossHair.SetActive(false);
+                    playerMovementBehavior.enabled = false;
+                    WaitSeconds(2, () => {
+                        fullTeaCup.SetActive(false);
+                        emptyTeaCup.transform.position = fullTeaCup.transform.position;
+                        emptyTeaCup.transform.rotation = fullTeaCup.transform.rotation;
+                        emptyTeaCup.gameObject.SetActive(true);
 
-                    StartCoroutine(DoAfterFrame());
+                        StartCoroutine(DoAfterFrame());
+                    });
                 }
                 else
                 {
@@ -447,6 +481,7 @@ public class InteractingScript : MonoBehaviour
                 if (yesChoice)
                 {
                     Debug.Log("see clue paper up close");
+                    audioManagerScript.PlaySFX(audioManagerScript.paper);
                     cluePaperScreen.SetActive(true);
                 }
                 else
@@ -477,7 +512,7 @@ public class InteractingScript : MonoBehaviour
             phoneOriginalPosition = phone.transform.position;
             phoneOriginalRotation = phone.transform.rotation;
             audioManagerScript.PlaySFX(audioManagerScript.wrongCall);
-            AttachPhone(9);
+            AttachPhone(7);
         }
     }
 
@@ -577,6 +612,31 @@ public class InteractingScript : MonoBehaviour
         Debug.Log("Still tasted yucky, but it warmed you up. And you seem to notice something. Try rotating the cup by holding R and moving your mouse.");
     }
 
+    public void WaitFrames(int frameCount, Action afterWait)
+    {
+        StartCoroutine(WaitFramesRoutine(frameCount, afterWait));
+    }
+
+    private IEnumerator WaitFramesRoutine(int frameCount, Action afterWait)
+    {
+        for (int i = 0; i < frameCount; i++)
+        {
+            yield return null; 
+        }
+
+        afterWait?.Invoke(); 
+    }
+
+    public void WaitSeconds(float seconds, Action afterWait)
+    {
+        StartCoroutine(WaitSecondsRoutine(seconds, afterWait));
+    }
+
+    private IEnumerator WaitSecondsRoutine(float  seconds, Action afterWait)
+    {
+        yield return new WaitForSeconds(seconds);
+        afterWait?.Invoke();
+    }
 
 }
 

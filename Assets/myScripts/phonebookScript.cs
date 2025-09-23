@@ -16,6 +16,8 @@ public class phonebookScript : MonoBehaviour
     public GameObject crosshair;
     public GameObject phonebook;
 
+    private AudioManagerScript audioManagerScript;
+
     public Sprite[] images;
     private int currentIndex = 0;
     public UnityEngine.UI.Image uiImage;   
@@ -26,6 +28,7 @@ public class phonebookScript : MonoBehaviour
         pickUpScript = mainCamera.GetComponent<PickUpScript>();
         camControllerFPS = mainCamera.GetComponent<CameraControllerFPS>();
         playerMovementBehavior = player.GetComponent<PlayerMovementBehavior>();
+        audioManagerScript = GameObject.FindGameObjectWithTag("audioManager").GetComponent<AudioManagerScript>();
     }
 
     void OnEnable()
@@ -54,6 +57,7 @@ public class phonebookScript : MonoBehaviour
     {
         if(currentIndex < images.Length-1)
         {
+            audioManagerScript.PlaySFX(audioManagerScript.paper);
             currentIndex++;
             uiImage.sprite = images[currentIndex];
         }
@@ -63,6 +67,7 @@ public class phonebookScript : MonoBehaviour
     {
         if(currentIndex > 0)
         {
+            audioManagerScript.PlaySFX(audioManagerScript.paper);
             currentIndex--;
             uiImage.sprite = images[currentIndex];
         }
