@@ -26,6 +26,15 @@ public class AudioManagerScript : MonoBehaviour
     public AudioClip slurp;
     public AudioClip lockedDoor;
     public AudioClip paper;
+    public AudioClip doorUnlocks;
+    public AudioClip doorOpens;
+    public AudioClip kidsCheer;
+    public AudioClip choice;
+    public AudioClip wrongPin;
+    public AudioClip correctPin;
+    public AudioClip safeButton;
+    public AudioClip openSafe;
+    public AudioClip confettiBlast;
 
     public AudioClip nightTime;
 

@@ -27,6 +27,9 @@ public class InteractingScript : MonoBehaviour
     public GameObject phonebook;
     public GameObject door;
     public GameObject doorKnob;
+    public GameObject keyHoleArea;
+    public ParticleSystem confetti1;
+    public ParticleSystem confetti2;
 
     public GameObject textGuide;
     public GameObject textBox;
@@ -50,6 +53,9 @@ public class InteractingScript : MonoBehaviour
     private float warmingTimeCounter = 0f;
     private float requiredWarmingTime = 5f;
     public float heightAboveCandle = 0.3f;
+
+    //key variable
+    private bool canUnlockDoor;
 
     //messages
     public GameObject pickUpMess;
@@ -120,6 +126,10 @@ public class InteractingScript : MonoBehaviour
         audioManagerScript = GameObject.FindGameObjectWithTag("audioManager").GetComponent<AudioManagerScript>();
         crossHair.SetActive(true);
         playerMovementBehavior = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementBehavior>();
+        keyHoleArea.SetActive(false);
+        canUnlockDoor = false;
+        confetti1.Stop();
+        confetti2.Stop();
     }
 
     private void Start()
@@ -130,6 +140,7 @@ public class InteractingScript : MonoBehaviour
     {
         
         warmingArea.SetActive(pickUpScript.heldObj != null && !warmedUp);
+        keyHoleArea.SetActive(pickUpScript.heldObj == key);
 
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
@@ -351,7 +362,7 @@ public class InteractingScript : MonoBehaviour
             warmingTimeCounter += Time.deltaTime;
             if (warmingTimeCounter >= requiredWarmingTime)
             {
-                Debug.Log("Done!! Drink up");
+                //Debug.Log("Done!! Drink up");
                 warming = false;
                 warmedUp = true;
                 cookingMess.SetActive(false);
@@ -364,6 +375,43 @@ public class InteractingScript : MonoBehaviour
                 //choice = 0;
                 textBox.SetActive(true);
             }
+        }
+        if (canUnlockDoor && pickUpScript.heldObj == null && !pickUpScript.justThrew)
+        {
+            Debug.Log("Unlocked door");
+            canUnlockDoor = false;
+
+            key.transform.SetParent(door.transform);
+            key.GetComponent<Rigidbody>().isKinematic = true;
+            key.transform.localPosition = new Vector3(0.101000071f, -0.0400000215f, 0.404999733f);
+            key.transform.localRotation = Quaternion.Euler(70.5835648f, 253.215179f, 72.235405f);
+            audioManagerScript.PlaySFX(audioManagerScript.doorUnlocks);
+            WaitSeconds(1, () =>
+            {
+                key.transform.localRotation = Quaternion.Euler(4.07513857f, 341.392944f, 178.600021f);
+                WaitSeconds(1.5f, () =>
+                {
+                    audioManagerScript.PlaySFX(audioManagerScript.doorOpens);
+                    WaitSeconds(0.2f, () =>
+                    {
+                        door.transform.localPosition = new Vector3(-2.63499999f, 1, -0.272000015f);
+                        door.transform.localRotation = Quaternion.Euler(0, 290.67981f, 0);
+                        WaitSeconds(2, () => {
+                            audioManagerScript.PlaySFX(audioManagerScript.kidsCheer);
+                            audioManagerScript.PlaySFX(audioManagerScript.confettiBlast);
+                            confetti1.Play();
+                            confetti2.Play();
+                            WaitSeconds(2, () => {
+                                dialogueScript.lines.Clear();
+                                dialogueScript.lines.Add("Congratulations!");
+                                dialogueScript.lines.Add("You now have access to the whole void, although you may have prefered not to.");
+                                textBox.SetActive(true);
+                            });
+                        });
+                    });
+
+                });
+            });
         }
 
     }
@@ -400,8 +448,20 @@ public class InteractingScript : MonoBehaviour
         warming = false;
     }
 
+    public void KeyEnteredKeyHoleArea()
+    {
+        Debug.Log("key entered keyHoleArea");
+        canUnlockDoor = true;
+    }
+
+    public void KeyExitedKeyHoleArea()
+    {
+        canUnlockDoor = false;
+    }
+
     public void madeChoice(bool yesChoice)
     {
+        //audioManagerScript.PlaySFX(audioManagerScript.choice);
         switch (choice)
         {
             case 0:
@@ -409,18 +469,20 @@ public class InteractingScript : MonoBehaviour
                 {
                     Debug.Log("drank tea");
                     audioManagerScript.PlaySFX(audioManagerScript.slurp);
-                    unresponsive = true;
-                    pickUpScript.enabled = false;
-                    cameraControllerFPS.enabled = false;
-                    crossHair.SetActive(false);
-                    playerMovementBehavior.enabled = false;
-                    WaitSeconds(2, () => {
+                    WaitFrames(1, () =>
+                    {
+                        unresponsive = true;
+                        pickUpScript.enabled = false;
+                        cameraControllerFPS.enabled = false;
+                        crossHair.SetActive(false);
+                        playerMovementBehavior.enabled = false;
                         fullTeaCup.SetActive(false);
                         emptyTeaCup.transform.position = fullTeaCup.transform.position;
                         emptyTeaCup.transform.rotation = fullTeaCup.transform.rotation;
                         emptyTeaCup.gameObject.SetActive(true);
-
-                        StartCoroutine(DoAfterFrame());
+                        WaitSeconds(2, () => {
+                            StartCoroutine(DoAfterFrame());
+                        });
                     });
                 }
                 else
@@ -549,14 +611,20 @@ public class InteractingScript : MonoBehaviour
         if (number == "2507")
         {
             Debug.Log("entered the right pin.");
-            safeScreen.SetActive(false);
-            safe.transform.Find("safe_door").transform.localPosition = new Vector3(0.5312f, 0.1019339f, 0.4281f);
-            safe.transform.Find("safe_door").transform.localRotation = Quaternion.Euler(0f, -128.281f, -180f);
-            safeOpened = true;
-            safe.GetComponent<BoxCollider>().enabled = false;
+            audioManagerScript.PlaySFX(audioManagerScript.correctPin);
+            WaitSeconds(0.5f, () =>
+            {
+                safeScreen.SetActive(false);
+                audioManagerScript.PlaySFX(audioManagerScript.openSafe);
+                safe.transform.Find("safe_door").transform.localPosition = new Vector3(0.5312f, 0.1019339f, 0.4281f);
+                safe.transform.Find("safe_door").transform.localRotation = Quaternion.Euler(0f, -128.281f, -180f);
+                safeOpened = true;
+                safe.GetComponent<BoxCollider>().enabled = false;
+            });
         }
         else
         {
+            audioManagerScript.PlaySFX(audioManagerScript.wrongPin);
             Debug.Log("entered the wrong pin.");
         }
     }

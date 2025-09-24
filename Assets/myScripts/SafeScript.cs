@@ -11,6 +11,7 @@ public class SafeScript : MonoBehaviour, IPointerClickHandler
     private CameraControllerFPS camControllerFPS;
     private PlayerMovementBehavior playerMovementBehavior;
     public GameObject crosshair;
+    private AudioManagerScript audioManagerScript;
 
     //pin number
     private string number;
@@ -21,6 +22,7 @@ public class SafeScript : MonoBehaviour, IPointerClickHandler
         pickUpScript = mainCamera.GetComponent<PickUpScript>();
         camControllerFPS = mainCamera.GetComponent<CameraControllerFPS>();
         playerMovementBehavior = player.GetComponent<PlayerMovementBehavior>();
+        audioManagerScript = GameObject.FindGameObjectWithTag("audioManager").GetComponent<AudioManagerScript>();
     }
 
     void OnEnable()
@@ -50,7 +52,14 @@ public class SafeScript : MonoBehaviour, IPointerClickHandler
 
     public void wasClicked(string name)
     {
+
         Debug.Log(name + " was clicked!");
+
+        if (name != "plateArea" && name!="safeScreen")
+        {
+            audioManagerScript.PlaySFX(audioManagerScript.safeButton);
+        }
+
         if (name == "button1")
         {
             number += "1";
@@ -104,6 +113,7 @@ public class SafeScript : MonoBehaviour, IPointerClickHandler
         {
             gameObject.SetActive(false);
         }
+
 
     }
 

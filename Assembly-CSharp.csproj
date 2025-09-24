@@ -78,6 +78,7 @@
     <Compile Include="Assets\myScripts\PhonebookBackgroundScript.cs" />
     <Compile Include="Assets\myScripts\paperAreaScript.cs" />
     <Compile Include="Assets\myScripts\LeftOfPhoneScript.cs" />
+    <Compile Include="Assets\KeyScript.cs" />
     <Compile Include="Assets\myScripts\CluePaperScript.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\myScripts\DialogueScript.cs" />

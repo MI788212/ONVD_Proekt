@@ -22,6 +22,7 @@ public class DialogueScript : MonoBehaviour
 
     private AudioSource audioSource;
     public AudioClip letterSound;
+    public AudioClip choice;
 
     private void Awake()
     {
@@ -109,7 +110,7 @@ public class DialogueScript : MonoBehaviour
         gameObject.SetActive(false);
 
     }
-    public void choseNo() 
+    public void choseNo()
     {
         interactingScript.madeChoice(false);
         gameObject.SetActive(false);
