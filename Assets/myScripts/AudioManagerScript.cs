@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManagerScript : MonoBehaviour
 {
@@ -35,14 +36,25 @@ public class AudioManagerScript : MonoBehaviour
     public AudioClip safeButton;
     public AudioClip openSafe;
     public AudioClip confettiBlast;
+    public AudioClip lightSwitch;
 
     public AudioClip nightTime;
+    public AudioClip windAmbience;
 
     private void Start()
     {
-        backgroundSource.loop = true;
-        backgroundSource.clip = nightTime;
-        backgroundSource.Play();
+        if (SceneManager.GetActiveScene().name == "StartMenu")
+        {
+            backgroundSource.loop = true;
+            backgroundSource.clip = windAmbience;
+            backgroundSource.Play();
+        }
+        else
+        {
+            backgroundSource.loop = true;
+            backgroundSource.clip = nightTime;
+            backgroundSource.Play();
+        }
     }
     public void PlaySFX(AudioClip clip)
     {

@@ -24,6 +24,9 @@ public class PickUpScript : MonoBehaviour
     public bool justThrew = false;
     public float throwCooldown = 0.2f;
 
+    float objectSize; // = pickedObject.GetComponent<Collider>().bounds.extents.magnitude;
+    float sizeMultiplier = 1.2f;
+
 
 
     void Start()
@@ -89,10 +92,15 @@ public class PickUpScript : MonoBehaviour
     {
         if (pickUpObj.GetComponent<Rigidbody>()) //make sure the object has a RigidBody
         {
+            objectSize = pickUpObj.GetComponent<Collider>().bounds.extents.magnitude;
+
             heldObj = pickUpObj; //assign heldObj to the object that was hit by the raycast (no longer == null)
             heldObjRb = pickUpObj.GetComponent<Rigidbody>(); //assign Rigidbody
             heldObjRb.isKinematic = true;
             heldObjRb.transform.parent = holdPos.transform; //parent object to holdposition
+
+            holdPos.transform.position += holdPos.transform.forward * objectSize * sizeMultiplier;
+
             heldObj.layer = LayerNumber; //change the object layer to the holdLayer
             //make sure object doesnt collide with player, it can cause weird bugs
             Physics.IgnoreCollision(heldObj.GetComponent<Collider>(), player.GetComponent<Collider>(), true);
@@ -111,6 +119,8 @@ public class PickUpScript : MonoBehaviour
         heldObj = null; //undefine game object
         justThrew = true;
         Invoke(nameof(ResetThrowFlag), throwCooldown);
+
+        holdPos.transform.position -= holdPos.transform.forward * objectSize * sizeMultiplier;
     }
     void MoveObject()
     {
@@ -159,6 +169,8 @@ public class PickUpScript : MonoBehaviour
         heldObj = null;
         justThrew = true;
         Invoke(nameof(ResetThrowFlag), throwCooldown);
+
+        holdPos.transform.position -= holdPos.transform.forward * objectSize * sizeMultiplier;
     }
 
     void ResetThrowFlag()
@@ -181,6 +193,5 @@ public class PickUpScript : MonoBehaviour
         }
 
         crosshair.SetActive(true);
-
     }
 }

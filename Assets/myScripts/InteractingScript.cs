@@ -30,6 +30,9 @@ public class InteractingScript : MonoBehaviour
     public GameObject keyHoleArea;
     public ParticleSystem confetti1;
     public ParticleSystem confetti2;
+    public GameObject lightSwitch;
+    public GameObject chair;
+    public GameObject wallStains;
 
     public GameObject textGuide;
     public GameObject textBox;
@@ -56,6 +59,7 @@ public class InteractingScript : MonoBehaviour
 
     //key variable
     private bool canUnlockDoor;
+    private bool unlockedDoor;
 
     //messages
     public GameObject pickUpMess;
@@ -87,6 +91,8 @@ public class InteractingScript : MonoBehaviour
     public GameObject cluePaperScreen;
 
     public GameObject crossHair;
+
+    public GameObject menu;
 
     //is this script active?
     public bool unresponsive;
@@ -130,6 +136,8 @@ public class InteractingScript : MonoBehaviour
         canUnlockDoor = false;
         confetti1.Stop();
         confetti2.Stop();
+        unlockedDoor = false;
+        menu.SetActive(false);
     }
 
     private void Start()
@@ -150,7 +158,12 @@ public class InteractingScript : MonoBehaviour
 
         //interactMess.SetActive(Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canInteractWith") && pickUpScript.heldObj == null);
 
-        if(guideMessIndex == 0)
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            menu.SetActive(true);
+        }
+
+        if (guideMessIndex == 0)
         {
             guideMessIndex=-1;
             ShowMessage("Try picking up an object with <<E>>",3f);
@@ -340,6 +353,40 @@ public class InteractingScript : MonoBehaviour
                         textBox.SetActive(true);
                     });
                 }
+                else if(hit.collider.gameObject == lightSwitch)
+                {
+                    audioManagerScript.PlaySFX(audioManagerScript.lightSwitch);
+                    unresponsive = true;
+                    pickUpScript.enabled = false;
+                    cameraControllerFPS.enabled = false;
+                    crossHair.SetActive(false);
+                    playerMovementBehavior.enabled = false;
+                    WaitSeconds(0.7f, () => {
+                        dialogueScript.lines.Clear();
+                        dialogueScript.lines.Add("Nothing happened.");
+                        textBox.SetActive(true);
+                    });
+                }
+                else if(hit.collider.gameObject == key)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("It's your only way out.");
+                    dialogueScript.lines.Add("Try not to lose it.");
+                    textBox.SetActive(true);
+                }
+                else if(hit.collider.gameObject == chair)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("Your back hurts just looking at it.");
+                    textBox.SetActive(true);
+                }
+                else if (hit.collider.gameObject == wallStains)
+                {
+                    dialogueScript.lines.Clear();
+                    dialogueScript.lines.Add("You took those picture frames down.");
+                    dialogueScript.lines.Add("They were empty anyway.");
+                    textBox.SetActive(true);
+                }
             }
         }
         else
@@ -376,10 +423,15 @@ public class InteractingScript : MonoBehaviour
                 textBox.SetActive(true);
             }
         }
-        if (canUnlockDoor && pickUpScript.heldObj == null && !pickUpScript.justThrew)
+        if (canUnlockDoor && pickUpScript.heldObj == null && !pickUpScript.justThrew && !unlockedDoor)
         {
             Debug.Log("Unlocked door");
             canUnlockDoor = false;
+            unlockedDoor = true;
+
+            pickUpScript.enabled = false;
+            unresponsive = true;
+            crossHair.SetActive(false);
 
             key.transform.SetParent(door.transform);
             key.GetComponent<Rigidbody>().isKinematic = true;
