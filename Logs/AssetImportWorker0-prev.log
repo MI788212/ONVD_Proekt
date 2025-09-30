@@ -2,7 +2,7 @@ Using pre-set license
 Built from '6000.1/staging' branch; Version is '6000.1.13f1 (418bd0acaa6b) revision 4295632'; Using compiler version '194234433'; Build Type 'Release'
 OS: 'Windows 11  (10.0.26100) 64bit Professional' Language: 'en' Physical Memory: 32212 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 1
-Date: 2025-09-24T13:11:28Z
+Date: 2025-09-29T15:34:09Z
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.1.13f1\Editor\Unity.exe
@@ -16,7 +16,7 @@ C:/Users/ivana/attepmting first person movement for the 10000000th time
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-53939
+50733
 -job-worker-count
 10
 -background-job-worker-count
@@ -62,14 +62,14 @@ C:/Users/ivana/attepmting first person movement for the 10000000th time
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Player connection [34596]  Target information:
+Player connection [13384]  Target information:
 
-Player connection [34596]  * "[IP] 192.168.56.1 [Port] 0 [Flags] 2 [Guid] 205725658 [EditorId] 205725658 [Version] 1048832 [Id] WindowsEditor(7,Dell-IVAM) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [13384]  * "[IP] 192.168.56.1 [Port] 0 [Flags] 2 [Guid] 2630981827 [EditorId] 2630981827 [Version] 1048832 [Id] WindowsEditor(7,Dell-IVAM) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [34596]  * "[IP] 192.168.0.135 [Port] 0 [Flags] 2 [Guid] 205725658 [EditorId] 205725658 [Version] 1048832 [Id] WindowsEditor(7,Dell-IVAM) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [13384]  * "[IP] 192.168.0.135 [Port] 0 [Flags] 2 [Guid] 2630981827 [EditorId] 2630981827 [Version] 1048832 [Id] WindowsEditor(7,Dell-IVAM) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [34596] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [34596] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [13384] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [13384] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 10
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -81,7 +81,7 @@ Library Redirect Path: Library/
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-Refreshing native plugins compatible for Editor in 218.58 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 2.43 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.1.13f1 (418bd0acaa6b)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.1.13f1/Editor/Data/Resources/UnitySubsystems
@@ -99,45 +99,45 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.1.13f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.1.13f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.1.13f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56728
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56240
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.1.13f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.1.13f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 1.174335 seconds.
-- Loaded All Assemblies, in 24.585 seconds
+Registered in 0.001993 seconds.
+- Loaded All Assemblies, in  0.326 seconds
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.421 seconds
-Domain Reload Profiling: 25005ms
-	BeginReloadAssembly (19231ms)
+- Finished resetting the current domain, in  0.331 seconds
+Domain Reload Profiling: 656ms
+	BeginReloadAssembly (109ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (1227ms)
+	RebuildCommonClasses (31ms)
 	RebuildNativeTypeToScriptingClass (9ms)
-	initialDomainReloadingComplete (1225ms)
-	LoadAllAssembliesAndSetupDomain (2892ms)
-		LoadAssemblies (19241ms)
+	initialDomainReloadingComplete (42ms)
+	LoadAllAssembliesAndSetupDomain (134ms)
+		LoadAssemblies (108ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (2876ms)
-			TypeCache.Refresh (2873ms)
-				TypeCache.ScanAssembly (2183ms)
+		AnalyzeDomain (131ms)
+			TypeCache.Refresh (129ms)
+				TypeCache.ScanAssembly (117ms)
 			BuildScriptInfoCaches (0ms)
-			ResolveRequiredComponents (0ms)
-	FinalizeReload (421ms)
+			ResolveRequiredComponents (1ms)
+	FinalizeReload (331ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (376ms)
+		SetupLoadedEditorAssemblies (299ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (58ms)
-			SetLoadedEditorAssemblies (4ms)
-			BeforeProcessingInitializeOnLoad (75ms)
-			ProcessInitializeOnLoadAttributes (159ms)
-			ProcessInitializeOnLoadMethodAttributes (81ms)
+			InitializePlatformSupportModulesInManaged (53ms)
+			SetLoadedEditorAssemblies (3ms)
+			BeforeProcessingInitializeOnLoad (67ms)
+			ProcessInitializeOnLoadAttributes (130ms)
+			ProcessInitializeOnLoadMethodAttributes (46ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -146,157 +146,100 @@ Domain Reload Profiling: 25005ms
 Worker process is ready to serve import requests
 Import Worker Mode flag is 0x00
 Begin MonoManager ReloadAssembly
-- Loaded All Assemblies, in 18.714 seconds
-Refreshing native plugins compatible for Editor in 1.08 ms, found 3 plugins.
+- Loaded All Assemblies, in  0.691 seconds
+Refreshing native plugins compatible for Editor in 0.78 ms, found 3 plugins.
 Native extension for WindowsStandalone target not found
 Native extension for WebGL target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  2.116 seconds
-Domain Reload Profiling: 20827ms
-	BeginReloadAssembly (185ms)
+- Finished resetting the current domain, in  0.690 seconds
+Domain Reload Profiling: 1379ms
+	BeginReloadAssembly (161ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (5ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (41ms)
-	RebuildCommonClasses (35ms)
-	RebuildNativeTypeToScriptingClass (9ms)
+		CreateAndSetChildDomain (31ms)
+	RebuildCommonClasses (30ms)
+	RebuildNativeTypeToScriptingClass (10ms)
 	initialDomainReloadingComplete (36ms)
-	LoadAllAssembliesAndSetupDomain (18446ms)
-		LoadAssemblies (17221ms)
+	LoadAllAssembliesAndSetupDomain (451ms)
+		LoadAssemblies (322ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (1319ms)
-			TypeCache.Refresh (1250ms)
-				TypeCache.ScanAssembly (1116ms)
-			BuildScriptInfoCaches (53ms)
-			ResolveRequiredComponents (12ms)
-	FinalizeReload (2117ms)
+		AnalyzeDomain (217ms)
+			TypeCache.Refresh (157ms)
+				TypeCache.ScanAssembly (143ms)
+			BuildScriptInfoCaches (48ms)
+			ResolveRequiredComponents (9ms)
+	FinalizeReload (691ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (678ms)
+		SetupLoadedEditorAssemblies (514ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (3ms)
-			SetLoadedEditorAssemblies (6ms)
-			BeforeProcessingInitializeOnLoad (160ms)
-			ProcessInitializeOnLoadAttributes (449ms)
-			ProcessInitializeOnLoadMethodAttributes (54ms)
-			AfterProcessingInitializeOnLoad (5ms)
+			InitializePlatformSupportModulesInManaged (2ms)
+			SetLoadedEditorAssemblies (5ms)
+			BeforeProcessingInitializeOnLoad (102ms)
+			ProcessInitializeOnLoadAttributes (352ms)
+			ProcessInitializeOnLoadMethodAttributes (50ms)
+			AfterProcessingInitializeOnLoad (3ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (6ms)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.06 seconds
-Refreshing native plugins compatible for Editor in 1.40 ms, found 3 plugins.
+		AwakeInstancesAfterBackupRestoration (5ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.01 seconds
+Refreshing native plugins compatible for Editor in 0.88 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 12 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 6041 unused Assets / (3.6 MB). Loaded Objects now: 6775.
-Memory consumption went from 152.4 MB to 148.8 MB.
-Total: 11.062700 ms (FindLiveObjects: 1.460400 ms CreateObjectMapping: 0.780900 ms MarkObjects: 6.066100 ms  DeleteObjects: 2.753500 ms)
+Unloading 6046 unused Assets / (4.1 MB). Loaded Objects now: 6781.
+Memory consumption went from 149.8 MB to 145.7 MB.
+Total: 7.598700 ms (FindLiveObjects: 0.548300 ms CreateObjectMapping: 0.341200 ms MarkObjects: 4.736100 ms  DeleteObjects: 1.972000 ms)
 
 ========================================================================
 Received Import Request.
-  Time since last request: 267959.785735 seconds.
-  path: Assets/textures3/accent_wall_MAT 2.mat
-  artifactKey: Guid(811a9f7449a4f9a4b999928d06a8b666) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/textures3/accent_wall_MAT 2.mat using Guid(811a9f7449a4f9a4b999928d06a8b666) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '39cf61ae48558f7b68fc6cf5e79ec3c8') in 0.4882121 seconds
+  Time since last request: 10210.426054 seconds.
+  path: Assets/my3DModels/clue_paper2.fbx
+  artifactKey: Guid(90a51467a8edcc04db486dcd27be038d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/my3DModels/clue_paper2.fbx using Guid(90a51467a8edcc04db486dcd27be038d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b6d0981a6646db643eb93211b5bdfd8d') in 0.4989127 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 10
+
+========================================================================
+Received Import Request.
+  Time since last request: 2.783872 seconds.
+  path: Assets/textures3/accent_wall_MAT 3.mat
+  artifactKey: Guid(7c885cfbc47e4344a81f302be4ec3e30) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/textures3/accent_wall_MAT 3.mat using Guid(7c885cfbc47e4344a81f302be4ec3e30) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '5c2fbf30ff83f885812f5e23ca3c12d2') in 0.0470011 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
-
-========================================================================
-Received Import Request.
-  Time since last request: 0.000043 seconds.
-  path: Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Outline.mat
-  artifactKey: Guid(79459efec17a4d00a321bdcc27bbc385) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Outline.mat using Guid(79459efec17a4d00a321bdcc27bbc385) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'da9eb549c02a4f405f243c3a24ba860c') in 0.080505 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 2
 
 ========================================================================
 Received Import Request.
   Time since last request: 0.000037 seconds.
-  path: Assets/TextMesh Pro/Resources/Fonts & Materials/PixelifySans-VariableFont_wght SDF.asset
-  artifactKey: Guid(c320c2aeb30e8164f9c89b89aee441fa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/TextMesh Pro/Resources/Fonts & Materials/PixelifySans-VariableFont_wght SDF.asset using Guid(c320c2aeb30e8164f9c89b89aee441fa) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f32585c749b7a27d5e444135f35577c2') in 0.06721 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+  path: Assets/TextMesh Pro/Resources/Fonts & Materials/PixelifySans-VariableFont_wght.ttf
+  artifactKey: Guid(c5a8e704f8500a643a11e2a78201757f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/TextMesh Pro/Resources/Fonts & Materials/PixelifySans-VariableFont_wght.ttf using Guid(c5a8e704f8500a643a11e2a78201757f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '808fe7f9d71ce4aebb236cef3c5d889c') in 0.0629961 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 4
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000027 seconds.
-  path: Assets/textures4/accent_wall_MAT.mat
-  artifactKey: Guid(e3d077e61408ba543b6da81e82ccb3d4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/textures4/accent_wall_MAT.mat using Guid(e3d077e61408ba543b6da81e82ccb3d4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd6a1cced6f692310fa5f5eac291fad53') in 0.0263732 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 2
+  Time since last request: 0.000032 seconds.
+  path: Assets/TextMesh Pro/Fonts/LiberationSans.ttf
+  artifactKey: Guid(e3265ab4bf004d28a9537516768c1c75) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/TextMesh Pro/Fonts/LiberationSans.ttf using Guid(e3265ab4bf004d28a9537516768c1c75) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'bc1df4d1987d860f969f08517a33e990') in 0.0155354 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 4
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000026 seconds.
-  path: Assets/sidewall_materials/accent_wall_MAT.mat
-  artifactKey: Guid(8141a6754be2d1949a116b04cff050fa) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/sidewall_materials/accent_wall_MAT.mat using Guid(8141a6754be2d1949a116b04cff050fa) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3b02151a8ea484a74b2da8b1fd59b6a5') in 0.0241035 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+  Time since last request: 0.000121 seconds.
+  path: Assets/room/start4.fbx
+  artifactKey: Guid(ec18d046335c78343b97eb3e4cb1a8f8) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/room/start4.fbx using Guid(ec18d046335c78343b97eb3e4cb1a8f8) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4ad6a1348b4abecef85b718035759bd4') in 0.1674959 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 23
 
 ========================================================================
 Received Import Request.
-  Time since last request: 0.000022 seconds.
-  path: Assets/textures3/wall_MAT 2.mat
-  artifactKey: Guid(6d0f70f0ce637a14c9bd71e12d948eef) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/textures3/wall_MAT 2.mat using Guid(6d0f70f0ce637a14c9bd71e12d948eef) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '3cd7e6ddfd34440bd8db98b82d5290a9') in 0.0206192 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+  Time since last request: 0.000041 seconds.
+  path: Assets/my3DModels/soba4.fbx
+  artifactKey: Guid(a7842da1351e71c41a5099660d2a7bd1) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/my3DModels/soba4.fbx using Guid(a7842da1351e71c41a5099660d2a7bd1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '09ec976e88ab0cc635e3253a54b7faea') in 0.6140848 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 114
 
-========================================================================
-Received Import Request.
-  Time since last request: 0.000024 seconds.
-  path: Assets/textures3/phone_book_paper_mat 1.mat
-  artifactKey: Guid(dc5706757b95aae4da1970bc9a4761d6) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/textures3/phone_book_paper_mat 1.mat using Guid(dc5706757b95aae4da1970bc9a4761d6) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7512f6a798f1478cc750b5834a7c7197') in 0.0350626 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
-
-========================================================================
-Received Prepare
-Begin MonoManager ReloadAssembly
-- Loaded All Assemblies, in  0.683 seconds
-Refreshing native plugins compatible for Editor in 1.00 ms, found 3 plugins.
-Native extension for WindowsStandalone target not found
-Native extension for WebGL target not found
-Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.676 seconds
-Domain Reload Profiling: 1360ms
-	BeginReloadAssembly (208ms)
-		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (17ms)
-		BackupInstance (0ms)
-		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (57ms)
-	RebuildCommonClasses (29ms)
-	RebuildNativeTypeToScriptingClass (12ms)
-	initialDomainReloadingComplete (23ms)
-	LoadAllAssembliesAndSetupDomain (412ms)
-		LoadAssemblies (316ms)
-		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (179ms)
-			TypeCache.Refresh (10ms)
-				TypeCache.ScanAssembly (0ms)
-			BuildScriptInfoCaches (156ms)
-			ResolveRequiredComponents (10ms)
-	FinalizeReload (676ms)
-		ReleaseScriptCaches (0ms)
-		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (510ms)
-			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (4ms)
-			SetLoadedEditorAssemblies (7ms)
-			BeforeProcessingInitializeOnLoad (118ms)
-			ProcessInitializeOnLoadAttributes (331ms)
-			ProcessInitializeOnLoadMethodAttributes (45ms)
-			AfterProcessingInitializeOnLoad (5ms)
-			EditorAssembliesLoaded (0ms)
-		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (15ms)
-Refreshing native plugins compatible for Editor in 0.73 ms, found 3 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 12 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 6039 unused Assets / (3.6 MB). Loaded Objects now: 6859.
-Memory consumption went from 171.2 MB to 167.6 MB.
-Total: 6.020100 ms (FindLiveObjects: 0.503600 ms CreateObjectMapping: 0.268500 ms MarkObjects: 3.661500 ms  DeleteObjects: 1.585100 ms)
-
-Prepare: number of updated asset objects reloaded= 0
 Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
 AssetImportWorker is now disconnected from the server
 Process exiting
