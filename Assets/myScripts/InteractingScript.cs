@@ -81,6 +81,10 @@ public class InteractingScript : MonoBehaviour
     public float holdTime = 2f;         // How long it stays fully visible, DISABLED
     public float fadeOutTime = 1.5f;      // Duration to fade out
 
+    public TextMeshProUGUI hint;
+    private bool calledCorrectNumber = false;
+    private bool accessedFioka3 = false;
+
     //screens
     public GameObject phoneScreen;
     private phoneScript phoneScript;
@@ -143,6 +147,7 @@ public class InteractingScript : MonoBehaviour
     private void Start()
     {
         ShowMessage("");
+        hint.text = "Try warming the tea by placing the mug on the candle.";
     }
     private void Update()
     {
@@ -155,7 +160,7 @@ public class InteractingScript : MonoBehaviour
 
         //whilePickedUpMess.SetActive(pickUpScript.heldObj != null);
         cookingMess.SetActive(warming);
-
+        
         //interactMess.SetActive(Physics.Raycast(ray, out hit, rayDistance, interactLayer) && hit.collider.gameObject.CompareTag("canInteractWith") && pickUpScript.heldObj == null);
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -172,6 +177,26 @@ public class InteractingScript : MonoBehaviour
         {
             guideMessIndex = -1;
             ShowMessage("Rotate an object when picked up, by holding <<R>> and draging your mouse",4f);
+        }
+
+        if(pickUpScript.heldObj == fioka2 )
+        {
+            accessedFioka3 = true;
+        }
+
+        if (calledCorrectNumber)
+        {
+            if (!tookSafeOut)
+            {
+                hint.text = "Check under the bed.";
+            }
+            else if (!accessedFioka3)
+            {
+                hint.text = "See what hides in the third drawer by taking the middle one out.";
+            }
+            else {
+                hint.text = "Use the system written on the paper to decode the call.\n\nX knocks and Y snaps intersect on the table to create one of the digits 1-9. For example:\n'knock knock snap, knock snap snap, knock snap snap snap' -> 4 2 3\n\nDon't forget the exception for digit 0, which is represented by 4 knocks. ";
+            }
         }
 
         if (Physics.Raycast(ray, out hit, rayDistance, interactLayer) && (hit.collider.gameObject.CompareTag("canPickUp")||hit.collider.gameObject.CompareTag("canInteractWith")) && pickUpScript.heldObj == null && !pickUpScript.justThrew && !unresponsive)
@@ -308,7 +333,7 @@ public class InteractingScript : MonoBehaviour
                     //    fioka2.transform.localRotation = new Quaternion(-0.00165190746f, -0.0865471512f, -0.000143506564f, 0.996246397f);
                     //}
                 }
-                else if(hit.collider.gameObject == fioka3 && fioka2indeks!=10)
+                else if(hit.collider.gameObject == fioka3 && fioka2indeks!=10 && !accessedFioka3)
                 {
                     audioManagerScript.PlaySFX(audioManagerScript.lockedDrawer);
                     unresponsive = true;
@@ -405,13 +430,16 @@ public class InteractingScript : MonoBehaviour
         }
         if (warming)
         {   
+            unresponsive = true;
             pickUpScript.enabled = false;
             warmingTimeCounter += Time.deltaTime;
             if (warmingTimeCounter >= requiredWarmingTime)
             {
                 //Debug.Log("Done!! Drink up");
                 warming = false;
+                unresponsive = false;
                 warmedUp = true;
+                hint.text = "Drink the tea.";
                 cookingMess.SetActive(false);
                 pickUpScript.enabled = true;
 
@@ -520,6 +548,7 @@ public class InteractingScript : MonoBehaviour
                 if(yesChoice)
                 {
                     Debug.Log("drank tea");
+                    hint.text = "Try calling the number with the initials written on the bottom of the mug.";
                     audioManagerScript.PlaySFX(audioManagerScript.slurp);
                     WaitFrames(1, () =>
                     {
@@ -617,7 +646,7 @@ public class InteractingScript : MonoBehaviour
             phoneOriginalRotation = phone.transform.rotation;
             audioManagerScript.PlaySFX(audioManagerScript.phoneCall);
             AttachPhone(21.4f);
-
+            calledCorrectNumber = true;
         }
         else
         {

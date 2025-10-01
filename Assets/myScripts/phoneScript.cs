@@ -46,6 +46,7 @@ public class phoneScript : MonoBehaviour
     {
         //Debug.Log("OnEnable phoneScript start");
         number = "";
+        counter = 0;
         StartCoroutine(DisableNextFrame());
         dialingDisabled = false;
     }
